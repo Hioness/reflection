@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zen Writer</title>
+    <style>
+        /* --- Typography Imports --- */
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;600&family=JetBrains+Mono:wght@300&display=swap');
+
+        /* --- Global Reset & Variables --- */
+        :root {
+            --bg-color: #F0EEE6;
+            --text-color: #333;
+            --art-color: #A09E96; /* Slightly lighter for background art */
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden; /* Prevent scroll on body, scroll editor instead */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- Background ASCII Art Layer --- */
+        #art-layer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: monospace;
+            font-size: 12px;
+            line-height: 1;
+            color: var(--art-color);
+            opacity: 0.15; /* Very subtle */
+            z-index: 0;
+            pointer-events: none; /* Let clicks pass through to editor */
+            white-space: pre;
+            user-select: none;
+        }
+
+        /* --- Editor Layer --- */
+        #editor-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 700px;
+            height: 80vh;
+            overflow-y: auto;
+            scrollbar-width: none; /* Hide scrollbar Firefox */
+        }
+        
+        #editor-container::-webkit-scrollbar { 
+            display: none; /* Hide scrollbar Chrome/Safari */ 
+        }
+
+        #editor {
+            outline: none;
+            width: 100%;
+            min-height: 100%;
+            padding-bottom: 20vh; /* Space at bottom */
+        }
+
+        /* Placeholder Logic */
+        [contenteditable]:empty:before {
+            content: attr(placeholder);
+            color: #999;
+            opacity: 0.5;
+            display: block; /* For Firefox */
+        }
+
+        /* --- Font Styles --- */
+        .font-serif {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            line-height: 1.6;
+        }
+
+        .font-sans {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            letter-spacing: -0.01em;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        /* --- Formatting Styles within Editor --- */
+        h1 { font-size: 2em; margin-top: 1em; margin-bottom: 0.5em; font-weight: 600; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 10px; }
+        h2 { font-size: 1.5em; margin-top: 1em; margin-bottom: 0.5em; font-weight: 600; }
+        b { font-weight: 600; }
+        i { font-style: italic; }
+
+        /* --- Minimal Toolbar (Fade in on hover) --- */
+        #toolbar {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            padding: 10px 20px;
+            background: rgba(240, 238, 230, 0.9);
+            border-radius: 50px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 20;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        /* Reveal toolbar when hovering near bottom or over the toolbar itself */
+        body:after {
+            content: '';
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            z-index: 19;
+        }
+        
+        body:hover #toolbar, #toolbar:hover {
+            opacity: 1;
+        }
+
+        .tool-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #666;
+            transition: color 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tool-btn:hover {
+            color: #000;
+        }
+
+        .tool-separator {
+            width: 1px;
+            background: #ccc;
+            height: 12px;
+            align-self: center;
+        }
+
+    </style>
+</head>
+<body>
+
+    <pre id="art-layer"></pre>
+
+    <div id="editor-container">
+        <div id="editor" class="font-mono" contenteditable="true" placeholder="Start typing..."></div>
+    </div>
+
+    <div id="toolbar">
+        <button class="tool-btn" onclick="format('bold')">Bold</button>
+        <button class="tool-btn" onclick="format('italic')">Italic</button>
+        <div class="tool-separator"></div>
+        <button class="tool-btn" onclick="format('h1')">H1</button>
+        <button class="tool-btn" onclick="format('h2')">H2</button>
+        <div class="tool-separator"></div>
+        <button class="tool-btn" onclick="cycleFont()" id="font-btn">Mono</button>
+    </div>
+
+    <script>
+        // --- 1. ASCII ART ENGINE (Based on your provided logic) ---
+        const canvas = document.getElementById('art-layer');
+        let frame = 0;
+        
+        function drawArt() {
+            // slightly wider grid for background coverage
+            const width = 70; 
+            const height = 40; 
+            const t = frame * 0.02; // Slower time (Zen)
+            let output = '';
+
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    // Mathematical pattern
+                    const value = Math.sin(x * 0.15 + t) * Math.cos(y * 0.15 - t * 0.5);
+                    
+                    // Map to characters (using the gradient you liked)
+                    // Adding non-breaking space for layout stability
+                    if (value > 0.6) output += '█';
+                    else if (value > 0.3) output += '▓';
+                    else if (value > 0) output += '▒';
+                    else if (value > -0.2) output += '░';
+                    else output += '·';
+                }
+                output += '\n';
+            }
+            
+            canvas.textContent = output;
+            frame++;
+            requestAnimationFrame(drawArt);
+        }
+
+        // Start animation
+        drawArt();
+
+
+        // --- 2. EDITOR LOGIC ---
+        
+        // Formatting function
+        function format(command) {
+            if (command === 'h1' || command === 'h2') {
+                document.execCommand('formatBlock', false, command);
+            } else {
+                document.execCommand(command, false, null);
+            }
+            document.getElementById('editor').focus();
+        }
+
+        // Font Switching Logic
+        const fonts = ['font-mono', 'font-serif', 'font-sans'];
+        const fontNames = ['Mono', 'Serif', 'Sans'];
+        let currentFontIndex = 0;
+
+        function cycleFont() {
+            const editor = document.getElementById('editor');
+            const btn = document.getElementById('font-btn');
+
+            // Remove current class
+            editor.classList.remove(fonts[currentFontIndex]);
+
+            // Increment index
+            currentFontIndex = (currentFontIndex + 1) % fonts.length;
+
+            // Add new class
+            editor.classList.add(fonts[currentFontIndex]);
+            
+            // Update button text
+            btn.textContent = fontNames[currentFontIndex];
+        }
+
+        // --- 3. INTERACTION ---
+        // Allow the art to ripple on click (Optional nice touch)
+        document.addEventListener('mousedown', () => {
+             // A slight jump in time creates a ripple effect in the math
+             frame += 10;
+        });
+
+    </script>
+</body>
+</html>
