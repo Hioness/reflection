@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reflection: Review & Write</title>
+    <style>
+        /* --- Typography Imports --- */
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;600&family=JetBrains+Mono:wght@300&display=swap');
+
+        /* --- Global Reset & Variables --- */
+        :root {
+            --bg-color: #F0EEE6;
+            --text-color: #333333;
+            --art-color-left: #999999;
+            --art-color-right: #A09E96;
+            --font-stack: 'Courier New', Courier, monospace;
+            --divider-width: 6px;
+            --min-panel-width: 300px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-stack);
+        }
+
+        /* --- Split Container --- */
+        .split-container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* --- Panels --- */
+        .panel {
+            position: relative;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .panel-left {
+            flex: 0 0 40%;
+            min-width: var(--min-panel-width);
+        }
+
+        .panel-right {
+            flex: 0 0 calc(60% - var(--divider-width));
+            min-width: var(--min-panel-width);
+        }
+
+        /* --- Divider --- */
+        .divider {
+            width: var(--divider-width);
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.05));
+            cursor: col-resize;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 100;
+            transition: background 0.2s ease;
+        }
+
+        .divider:hover,
+        .divider.dragging {
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1));
+        }
+
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 2px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 1px;
+        }
+
+        /* --- ASCII Background Layers --- */
+        .ascii-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .ascii-layer pre {
+            font-size: 14px;
+            line-height: 14px;
+            white-space: pre;
+            margin: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #left-ascii {
+            display: none;
+            /* Hidden per user request */
+        }
+
+        #left-ascii pre {
+            color: var(--art-color-left);
+            opacity: 0.5;
+        }
+
+        #right-ascii {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #right-ascii pre {
+            color: var(--art-color-right);
+            opacity: 0.08;
+            position: relative;
+        }
+
+        /* --- Panel Content --- */
+        .panel-content {
+            position: relative;
+            z-index: 10;
+            height: 100%;
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+
+        /* ========================================
+           LEFT PANEL: Annual Review Template Styles
+           ======================================== */
+        .panel-left .panel-content {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 60px 30px;
+        }
+
+        .panel-left h1,
+        .panel-left h2 {
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 3em;
+            margin-bottom: 1em;
+            border-bottom: 1px solid var(--text-color);
+            padding-bottom: 0.5em;
+            opacity: 0.9;
+        }
+
+        .panel-left h1 {
+            font-size: 1.8rem;
+            margin-top: 0;
+            text-align: center;
+            border-bottom: none;
+            margin-bottom: 2em;
+        }
+
+        .panel-left .subtitle {
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 4em;
+            opacity: 0.7;
+        }
+
+        .panel-left .question-group {
+            margin-bottom: 2em;
+        }
+
+        .panel-left ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .panel-left li {
+            margin-bottom: 1.5em;
+            padding-left: 1.5em;
+            position: relative;
+            transition: opacity 0.3s ease;
+            cursor: text;
+        }
+
+        .panel-left li::before {
+            content: "—";
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0.5;
+        }
+
+        .panel-left li:hover {
+            color: #000;
+        }
+
+        .panel-left .memories-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0 20px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .panel-left .memories-list li {
+            margin-bottom: 1.5em;
+            padding-left: 1.5em;
+            position: relative;
+            cursor: text;
+        }
+
+        .panel-left .memories-list li::before {
+            content: "—";
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0.5;
+        }
+
+        .panel-left .memories-list li:hover {
+            color: #000;
+        }
+
+
+
+        /* ========================================
+           RIGHT PANEL: Zen Writer Styles
+           ======================================== */
+        .panel-right .panel-content {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 60px 20px;
+        }
+
+        #editor-container {
+            width: 100%;
+            max-width: 600px;
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        #editor-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        #editor {
+            outline: none;
+            width: 100%;
+            min-height: 100%;
+            padding-bottom: 20vh;
+        }
+
+        [contenteditable]:empty:before {
+            content: attr(placeholder);
+            color: #999;
+            opacity: 0.5;
+            display: block;
+        }
+
+        /* Font Styles */
+        .font-serif {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            line-height: 1.6;
+        }
+
+        .font-sans {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            letter-spacing: -0.01em;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        /* Editor formatting */
+        #editor h1 {
+            font-size: 2em;
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding-bottom: 10px;
+        }
+
+        #editor h2 {
+            font-size: 1.5em;
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+            font-weight: 600;
+        }
+
+        /* Toolbar */
+        #toolbar {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            padding: 10px 20px;
+            background: rgba(240, 238, 230, 0.95);
+            border-radius: 50px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 200;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .panel-right:hover #toolbar,
+        #toolbar:hover {
+            opacity: 1;
+        }
+
+        .tool-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: #666;
+            transition: color 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tool-btn:hover {
+            color: #000;
+        }
+
+        .tool-separator {
+            width: 1px;
+            background: #ccc;
+            height: 12px;
+            align-self: center;
+        }
+
+        /* Prevent text selection during resize */
+        body.resizing {
+            user-select: none;
+            cursor: col-resize;
+        }
+
+        body.resizing * {
+            cursor: col-resize !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="split-container">
+        <!-- LEFT PANEL: Annual Review Template -->
+        <div class="panel panel-left" id="left-panel">
+            <div class="ascii-layer" id="left-ascii">
+                <pre id="left-ascii-pre"></pre>
+            </div>
+            <div class="panel-content">
+                <h1>Modern Wisdom<br>Annual Review</h1>
+                <p class="subtitle">A structured reflection and planning workbook.</p>
+
+                <section id="review">
+                    <h2>Review</h2>
+                    <div class="question-group">
+                        <ul>
+                            <li>How has this year gone?</li>
+                            <li>What went well?</li>
+                            <li>What went badly?</li>
+                            <li>Why?</li>
+                            <li>What lessons did I learn?</li>
+                            <li>What habit or system accounted for most of my success?</li>
+                            <li>What are the most valuable ways I spend my time?</li>
+                            <li>How can I find more time for this?</li>
+                            <li>What brought me the most happiness?</li>
+                            <li>How can I help these activities to happen more often?</li>
+                            <li>Who are the people that had the greatest impact on me?</li>
+                            <li>How can I see and collaborate with them more?</li>
+                            <li>What did I expect to complete, but didn't?</li>
+                            <li>Is this still an important goal of mine? If so, how can I make future follow-through
+                                more likely?</li>
+                            <li>What are the least valuable ways I am spending my time?</li>
+                            <li>How can I prevent myself from continuing to spend time in this way?</li>
+                            <li>How have my goals or priorities shifted over the last few months?</li>
+                            <li>Is there anything I am still doing that is no longer in alignment? Why?</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="memories">
+                    <h2>Memories</h2>
+                    <ul class="memories-list">
+                        <li>Best Surprise</li>
+                        <li>Best Meal</li>
+                        <li>Coolest New Experience</li>
+                        <li>Favourite Weekend</li>
+                        <li>Favourite First Meeting</li>
+                        <li>Favourite New City</li>
+                        <li>Favourite New Emotion</li>
+                        <li>Favourite New Walk</li>
+                        <li>Favourite New Friend</li>
+                        <li>Favourite Tour</li>
+                        <li>Favourite Day</li>
+                        <li>Most Intense Week</li>
+                        <li>Best Sex</li>
+                        <li>Favourite Artist</li>
+                        <li>Favourite Song</li>
+                        <li>Favourite Quote</li>
+                    </ul>
+                </section>
+
+                <section id="plan">
+                    <h2>Plan</h2>
+                    <div class="question-group">
+                        <ul>
+                            <li>What would I do this year if I wanted to make 85 year old me miserable?</li>
+                            <li>What would 85 year old me wish I did more of?</li>
+                            <li>What are the things I do to make my day go great?</li>
+                            <li>What things make my days go terribly?</li>
+                            <li>What do I think is productive that isn't?</li>
+                            <li>What is productive that I don't realise?</li>
+                            <li>What do I want to do less of with my time?</li>
+                            <li>What do I want to do more of with my time?</li>
+                            <li>What does an ideal normal day look like? Write it out.</li>
+                            <li>What conversations do I need to have?</li>
+                            <li>What are the habits I'm committing to starting and stopping?</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="final-thoughts">
+                    <h2>Final Thoughts</h2>
+                    <div class="question-group">
+                        <ul>
+                            <li>What would have had to have happened by the end of next year for me to look back on the
+                                year and consider it a success?</li>
+                            <li>Who do I need to become for next year's chapter of my life story to turn out the way I
+                                would write it?</li>
+                            <li>Knowing what I know now, what advice would I give to myself 12 months ago?</li>
+                        </ul>
+                    </div>
+                </section>
+
+
+            </div>
+        </div>
+
+        <!-- DIVIDER -->
+        <div class="divider" id="divider"></div>
+
+        <!-- RIGHT PANEL: Zen Writer -->
+        <div class="panel panel-right" id="right-panel">
+            <div class="ascii-layer" id="right-ascii">
+                <pre id="right-ascii-pre"></pre>
+            </div>
+            <div class="panel-content">
+                <div id="editor-container">
+                    <div id="editor" class="font-mono" contenteditable="true" placeholder="Start writing..."></div>
+                </div>
+                <div id="toolbar">
+                    <button class="tool-btn" onclick="format('bold')">Bold</button>
+                    <button class="tool-btn" onclick="format('italic')">Italic</button>
+                    <div class="tool-separator"></div>
+                    <button class="tool-btn" onclick="format('h1')">H1</button>
+                    <button class="tool-btn" onclick="format('h2')">H2</button>
+                    <div class="tool-separator"></div>
+                    <button class="tool-btn" onclick="cycleFont()" id="font-btn">Mono</button>
+                    <div class="tool-separator"></div>
+                    <button class="tool-btn" onclick="copyContent()" id="copy-btn">Copy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =============================================
+        // RESIZABLE SPLIT PANEL
+        // =============================================
+        const divider = document.getElementById('divider');
+        const leftPanel = document.getElementById('left-panel');
+        const rightPanel = document.getElementById('right-panel');
+        const container = document.querySelector('.split-container');
+
+        const MIN_PANEL_WIDTH = 300; // px
+        let isDragging = false;
+
+        divider.addEventListener('mousedown', startDrag);
+        divider.addEventListener('touchstart', startDrag, { passive: false });
+
+        function startDrag(e) {
+            e.preventDefault();
+            isDragging = true;
+            document.body.classList.add('resizing');
+            divider.classList.add('dragging');
+
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', stopDrag);
+            document.addEventListener('touchmove', drag, { passive: false });
+            document.addEventListener('touchend', stopDrag);
+        }
+
+        function drag(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const containerRect = container.getBoundingClientRect();
+            const containerWidth = containerRect.width;
+            const dividerWidth = divider.offsetWidth;
+
+            // Calculate new left panel width
+            let newLeftWidth = clientX - containerRect.left;
+
+            // Enforce minimum widths
+            const maxLeftWidth = containerWidth - dividerWidth - MIN_PANEL_WIDTH;
+            newLeftWidth = Math.max(MIN_PANEL_WIDTH, Math.min(newLeftWidth, maxLeftWidth));
+
+            // Calculate percentages
+            const leftPercent = (newLeftWidth / containerWidth) * 100;
+            const rightPercent = ((containerWidth - newLeftWidth - dividerWidth) / containerWidth) * 100;
+
+            leftPanel.style.flex = `0 0 ${leftPercent}%`;
+            rightPanel.style.flex = `0 0 ${rightPercent}%`;
+
+            // Trigger resize for ASCII animations
+            resizeLeftAscii();
+            resizeRightAscii();
+        }
+
+        function stopDrag() {
+            isDragging = false;
+            document.body.classList.remove('resizing');
+            divider.classList.remove('dragging');
+
+            document.removeEventListener('mousemove', drag);
+            document.removeEventListener('mouseup', stopDrag);
+            document.removeEventListener('touchmove', drag);
+            document.removeEventListener('touchend', stopDrag);
+        }
+
+        // =============================================
+        // LEFT PANEL: ASCII ANIMATION (Multi-pattern)
+        // =============================================
+        const leftCanvas = document.getElementById('left-ascii-pre');
+        const FONT_SIZE = 14;
+        let leftWidth, leftHeight;
+        let leftFrame = 0;
+        let leftPatternIndex = 0;
+        let leftClickRipple = { x: -1000, y: -1000, time: -100, active: false };
+
+        const CHARS = ' ·░▒▓█';
+
+        const leftPatterns = [
+            // Pattern 0: Flowing Plasma
+            (x, y, t, w, h) => {
+                const u = x / w * 4;
+                const v = y / h * 4;
+                return Math.sin(u + t) * Math.cos(v + t * 0.5) + Math.sin((u + v) * 0.5 + t * 0.2);
+            },
+            // Pattern 1: Rain / Digital Falls
+            (x, y, t) => {
+                const speed = t * 2;
+                const colOffset = x * 132.1;
+                const val = Math.sin((y * 0.5) + speed + colOffset);
+                return val > 0.8 ? val * 2 : val;
+            },
+            // Pattern 2: Breathing Rings
+            (x, y, t, w, h) => {
+                const cx = w / 2;
+                const cy = h / 2;
+                const dx = x - cx;
+                const dy = y - cy;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                return Math.sin(dist * 0.2 - t * 1.5) * Math.cos(Math.atan2(dy, dx) * 3 + t);
+            },
+            // Pattern 3: Drifting Sand (Dunes)
+            (x, y, t) => {
+                return Math.sin(x * 0.1 + t * 0.5) * Math.cos(y * 0.05 + t * 0.2) * Math.sin(x * 0.05 + y * 0.05);
+            }
+        ];
+
+        function resizeLeftAscii() {
+            const panel = document.getElementById('left-panel');
+            leftWidth = Math.ceil(panel.offsetWidth / FONT_SIZE) + 2;
+            leftHeight = Math.ceil(panel.offsetHeight / FONT_SIZE) + 2;
+        }
+
+        function drawLeftAscii() {
+            const t = leftFrame * 0.015;
+            let output = '';
+            const patternFunc = leftPatterns[leftPatternIndex];
+
+            for (let y = 0; y < leftHeight; y++) {
+                for (let x = 0; x < leftWidth; x++) {
+                    let value = patternFunc(x, y, t, leftWidth, leftHeight);
+
+                    // Add Ripple Effect
+                    if (leftClickRipple.active) {
+                        const dx = x - leftClickRipple.x;
+                        const dy = y - leftClickRipple.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        const wave = Math.sin(dist * 0.5 - (leftFrame - leftClickRipple.time) * 0.2);
+                        const decay = Math.max(0, 1 - (leftFrame - leftClickRipple.time) / 60);
+                        value += wave * decay * 2;
+                    }
+
+                    let index = Math.floor((value + 1.5) * 1.5);
+                    if (index < 0) index = 0;
+                    if (index > CHARS.length - 1) index = CHARS.length - 1;
+                    output += CHARS[index];
+                }
+                output += '\n';
+            }
+
+            leftCanvas.textContent = output;
+            leftFrame++;
+            requestAnimationFrame(drawLeftAscii);
+        }
+
+        // Left panel click handler
+        leftPanel.addEventListener('click', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+            leftPatternIndex = (leftPatternIndex + 1) % leftPatterns.length;
+
+            const rect = leftPanel.getBoundingClientRect();
+            leftClickRipple.x = (e.clientX - rect.left) / FONT_SIZE;
+            leftClickRipple.y = (e.clientY - rect.top) / FONT_SIZE;
+            leftClickRipple.time = leftFrame;
+            leftClickRipple.active = true;
+        });
+
+        // =============================================
+        // RIGHT PANEL: ASCII ANIMATION (Zen Wave)
+        // =============================================
+        const rightCanvas = document.getElementById('right-ascii-pre');
+        let rightWidth, rightHeight;
+        let rightFrame = 0;
+
+        function resizeRightAscii() {
+            // Fixed smaller size for centered, subtle background
+            rightWidth = 40;
+            rightHeight = 20;
+        }
+
+        function drawRightAscii() {
+            const t = rightFrame * 0.02;
+            let output = '';
+
+            for (let y = 0; y < rightHeight; y++) {
+                for (let x = 0; x < rightWidth; x++) {
+                    const value = Math.sin(x * 0.15 + t) * Math.cos(y * 0.15 - t * 0.5);
+
+                    if (value > 0.6) output += '█';
+                    else if (value > 0.3) output += '▓';
+                    else if (value > 0) output += '▒';
+                    else if (value > -0.2) output += '░';
+                    else output += '·';
+                }
+                output += '\n';
+            }
+
+            rightCanvas.textContent = output;
+            rightFrame++;
+            requestAnimationFrame(drawRightAscii);
+        }
+
+        // Right panel click effect
+        rightPanel.addEventListener('mousedown', () => {
+            rightFrame += 10;
+        });
+
+        // =============================================
+        // ZEN WRITER: Editor Functions
+        // =============================================
+        function format(command) {
+            if (command === 'h1' || command === 'h2') {
+                document.execCommand('formatBlock', false, command);
+            } else {
+                document.execCommand(command, false, null);
+            }
+            document.getElementById('editor').focus();
+        }
+
+        const fonts = ['font-mono', 'font-serif', 'font-sans'];
+        const fontNames = ['Mono', 'Serif', 'Sans'];
+        let currentFontIndex = 0;
+
+        function cycleFont() {
+            const editor = document.getElementById('editor');
+            const btn = document.getElementById('font-btn');
+
+            editor.classList.remove(fonts[currentFontIndex]);
+            currentFontIndex = (currentFontIndex + 1) % fonts.length;
+            editor.classList.add(fonts[currentFontIndex]);
+            btn.textContent = fontNames[currentFontIndex];
+
+            // Save font preference
+            localStorage.setItem('zenwriter-font', currentFontIndex);
+        }
+
+        // =============================================
+        // COPY FUNCTION
+        // =============================================
+        function copyContent() {
+            const editor = document.getElementById('editor');
+            const text = editor.innerText;
+            const btn = document.getElementById('copy-btn');
+
+            navigator.clipboard.writeText(text).then(() => {
+                btn.textContent = 'Copied!';
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                }, 1500);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+
+        // =============================================
+        // LOCAL STORAGE PERSISTENCE
+        // =============================================
+        const STORAGE_KEY = 'zenwriter-content';
+        const editor = document.getElementById('editor');
+        let saveTimeout;
+
+        // Load saved content on page load
+        function loadSavedContent() {
+            const savedContent = localStorage.getItem(STORAGE_KEY);
+            if (savedContent) {
+                editor.innerHTML = savedContent;
+            }
+
+            // Load saved font preference
+            const savedFont = localStorage.getItem('zenwriter-font');
+            if (savedFont !== null) {
+                const fontIndex = parseInt(savedFont, 10);
+                if (fontIndex >= 0 && fontIndex < fonts.length) {
+                    editor.classList.remove(fonts[currentFontIndex]);
+                    currentFontIndex = fontIndex;
+                    editor.classList.add(fonts[currentFontIndex]);
+                    document.getElementById('font-btn').textContent = fontNames[currentFontIndex];
+                }
+            }
+        }
+
+        // Save content with debounce (saves 500ms after user stops typing)
+        function saveContent() {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                localStorage.setItem(STORAGE_KEY, editor.innerHTML);
+            }, 500);
+        }
+
+        // Listen for input changes
+        editor.addEventListener('input', saveContent);
+
+
+
+        // =============================================
+        // INITIALIZATION
+        // =============================================
+        window.addEventListener('resize', () => {
+            resizeLeftAscii();
+            resizeRightAscii();
+        });
+
+        // Initial setup
+        loadSavedContent();
+        resizeLeftAscii();
+        resizeRightAscii();
+        // drawLeftAscii(); // Disabled - left background hidden
+        drawRightAscii();
+    </script>
+</body>
+
+</html>
