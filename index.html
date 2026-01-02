@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reflection: Review & Write</title>
+    <script>
+        // Mobile detection and redirect
+        (function() {
+            const MOBILE_BREAKPOINT = 768; // px
+            const MOBILE_URL = '/mobile.html';
+            const DESKTOP_URL = '/split-view.html';
+            
+            // Check if we're already on the correct page
+            const currentPath = window.location.pathname;
+            const isMobilePage = currentPath.includes('mobile.html');
+            const isDesktopPage = currentPath.includes('split-view.html');
+            
+            // Get screen width
+            const screenWidth = window.innerWidth;
+            const isMobile = screenWidth < MOBILE_BREAKPOINT;
+            
+            // Debug logging (remove in production)
+            console.log('Screen width:', screenWidth);
+            console.log('Is mobile:', isMobile);
+            console.log('Current path:', currentPath);
+            
+            // Redirect logic
+            if (isMobile && !isMobilePage) {
+                console.log('Redirecting to mobile...');
+                window.location.href = MOBILE_URL;
+            } else if (!isMobile && !isDesktopPage) {
+                console.log('Redirecting to desktop...');
+                window.location.href = DESKTOP_URL;
+            }
+        })();
+    </script>
+</head>
+<body>
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: system-ui, sans-serif; color: #666;">
+        <div style="text-align: center;">
+            <div style="font-size: 2rem; margin-bottom: 1rem;">⏳</div>
+            <div>Redirecting to the appropriate version...</div>
+        </div>
+    </div>
+</body>
+</html>

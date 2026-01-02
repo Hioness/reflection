@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Wisdom Annual Review</title>
+    <style>
+        :root {
+            --bg-color: #F0EEE6;
+            --text-color: #333333;
+            --art-color: #999999; /* Lighter gray for background art */
+            --font-stack: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-stack);
+            overflow-x: hidden; /* Prevent horizontal scroll from background */
+            min-height: 100vh;
+            cursor: default;
+        }
+
+        /* 
+         * Background Art Canvas 
+         * Fixed position, top-left aligned to span full window
+         */
+#ascii-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.5; /* Slightly reduced opacity for better text readability */
+        }
+
+#ascii-pre {
+            font-size: 14px;
+            line-height: 14px;
+            white-space: pre;
+            color: var(--art-color);
+            margin: 0; /* Remove default margins */
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 
+         * Main Content Container 
+         * Centered, floating above the art
+         */
+        main {
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        h1, h2 {
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 3em;
+            margin-bottom: 1em;
+            border-bottom: 1px solid var(--text-color);
+            padding-bottom: 0.5em;
+            opacity: 0.9;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-top: 0;
+            text-align: center;
+            border-bottom: none;
+            margin-bottom: 2em;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+        }
+
+        p.subtitle {
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 4em;
+            opacity: 0.7;
+        }
+
+        /* Question List Styling */
+        .question-group {
+            margin-bottom: 2em;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 1.5em;
+            padding-left: 1.5em;
+            position: relative;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Custom bullet point */
+        li::before {
+            content: "—";
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0.5;
+        }
+
+        /* Input Styling */
+        .answer-space {
+            display: block;
+            width: 100%;
+            margin-top: 0.5em;
+            padding: 0.5em;
+            border: none;
+            border-bottom: 1px dashed #aaa;
+            background: transparent;
+            font-family: var(--font-stack);
+            font-size: 1rem;
+            color: var(--text-color);
+            outline: none;
+            resize: vertical;
+            min-height: 1.5em;
+        }
+        
+        .answer-space:focus {
+            border-bottom-style: solid;
+            border-color: var(--text-color);
+        }
+
+        /* Memories Grid */
+        .memories-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 600px) {
+            .memories-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .memory-item {
+            margin-bottom: 0;
+        }
+
+        /* Footer / Notes */
+        .notes-section {
+            min-height: 200px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Dynamic Background -->
+    <div id="ascii-canvas">
+        <pre id="ascii-pre"></pre>
+    </div>
+
+    <!-- Content -->
+    <main>
+        <h1>Modern Wisdom<br>Annual Review</h1>
+        <p class="subtitle">A structured reflection and planning workbook.</p>
+
+        <section id="review">
+            <h2>Review</h2>
+            <div class="question-group">
+                <ul>
+                    <li>How has this year gone?</li>
+                    <li>What went well?</li>
+                    <li>What went badly?</li>
+                    <li>Why?</li>
+                    <li>What lessons did I learn?</li>
+                    <li>What habit or system accounted for most of my success?</li>
+                    <li>What are the most valuable ways I spend my time?</li>
+                    <li>How can I find more time for this?</li>
+                    <li>What brought me the most happiness?</li>
+                    <li>How can I help these activities to happen more often?</li>
+                    <li>Who are the people that had the greatest impact on me?</li>
+                    <li>How can I see and collaborate with them more?</li>
+                    <li>What did I expect to complete, but didn’t?</li>
+                    <li>Is this still an important goal of mine? If so, how can I make future follow-through more likely?</li>
+                    <li>What are the least valuable ways I am spending my time?</li>
+                    <li>How can I prevent myself from continuing to spend time in this way?</li>
+                    <li>How have my goals or priorities shifted over the last few months?</li>
+                    <li>Is there anything I am still doing that is no longer in alignment? Why?</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="memories">
+            <h2>Memories</h2>
+            <div class="memories-grid">
+                <div class="memory-item"><strong>Best Surprise:</strong></div>
+                <div class="memory-item"><strong>Best Meal:</strong></div>
+                <div class="memory-item"><strong>Coolest New Experience:</strong></div>
+                <div class="memory-item"><strong>Favourite Weekend:</strong></div>
+                <div class="memory-item"><strong>Favourite First Meeting:</strong></div>
+                <div class="memory-item"><strong>Favourite New City:</strong></div>
+                <div class="memory-item"><strong>Favourite New Emotion:</strong></div>
+                <div class="memory-item"><strong>Favourite New Walk:</strong></div>
+                <div class="memory-item"><strong>Favourite New Friend:</strong></div>
+                <div class="memory-item"><strong>Favourite Tour:</strong></div>
+                <div class="memory-item"><strong>Favourite Day:</strong></div>
+                <div class="memory-item"><strong>Most Intense Week:</strong></div>
+                <div class="memory-item"><strong>Best Sex:</strong></div>
+                <div class="memory-item"><strong>Favourite Artist:</strong></div>
+                <div class="memory-item"><strong>Favourite Song:</strong></div>
+                <div class="memory-item"><strong>Favourite Quote:</strong></div>
+            </div>
+        </section>
+
+        <section id="plan">
+            <h2>Plan</h2>
+            <div class="question-group">
+                <ul>
+                    <li>What would I do this year if I wanted to make 85 year old me miserable?</li>
+                    <li>What would 85 year old me wish I did more of?</li>
+                    <li>What are the things I do to make my day go great?</li>
+                    <li>What things make my days go terribly?</li>
+                    <li>What do I think is productive that isn’t?</li>
+                    <li>What is productive that I don’t realise?</li>
+                    <li>What do I want to do less of with my time?</li>
+                    <li>What do I want to do more of with my time?</li>
+                    <li>What does an ideal normal day look like? Write it out.</li>
+                    <li>What conversations do I need to have?</li>
+                    <li>What are the habits I’m committing to starting and stopping?</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="final-thoughts">
+            <h2>Final Thoughts</h2>
+            <div class="question-group">
+                <ul>
+                    <li>What would have had to have happened by the end of next year for me to look back on the year and consider it a success?</li>
+                    <li>Who do I need to become for next year’s chapter of my life story to turn out the way I would write it?</li>
+                    <li>Knowing what I know now, what advice would I give to myself 12 months ago?</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="misc">
+            <h2>Miscellaneous Notes & Reflections</h2>
+            <div class="question-group notes-section">
+                <textarea class="answer-space" style="height: 150px; border-bottom: none;" placeholder="Type your notes here..."></textarea>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        /**
+         * ZEN ASCII ANIMATION ENGINE
+         */
+
+        const canvas = document.getElementById('ascii-pre');
+        const body = document.body;
+        
+        // Config
+        const FONT_SIZE = 14; // px
+        let width, height;
+        let frame = 0;
+        let patternIndex = 0;
+        
+        // Interaction state
+        let clickRipple = { x: -1000, y: -1000, time: -100, active: false };
+
+        // Character set
+        const CHARS = ' ·░▒▓█'; 
+        
+        // Resize handler
+function resize() {
+            // Calculate grid dimensions to COVER the window
+            // We add +2 to ensure no white edges on the right/bottom
+            const cols = Math.ceil(window.innerWidth / FONT_SIZE) + 2;
+            const rows = Math.ceil(window.innerHeight / FONT_SIZE) + 2;
+            width = cols;
+            height = rows;
+            
+            // Set the canvas container to be larger than viewport
+            const canvasContainer = document.getElementById('ascii-canvas');
+            canvasContainer.style.width = (width * FONT_SIZE) + 'px';
+            canvasContainer.style.height = (height * FONT_SIZE) + 'px';
+            
+            // Set the pre element to match
+            canvas.style.width = (width * FONT_SIZE) + 'px';
+            canvas.style.height = (height * FONT_SIZE) + 'px';
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Pattern Definitions
+        const patterns = [
+            // Pattern 0: Flowing Plasma
+            (x, y, t) => {
+                const u = x / width * 4;
+                const v = y / height * 4;
+                return Math.sin(u + t) * Math.cos(v + t * 0.5) + Math.sin((u + v) * 0.5 + t * 0.2);
+            },
+            // Pattern 1: Rain / Digital Falls
+            (x, y, t) => {
+                const speed = t * 2;
+                const colOffset = x * 132.1; 
+                const val = Math.sin((y * 0.5) + speed + colOffset);
+                return val > 0.8 ? val * 2 : val; 
+            },
+            // Pattern 2: Breathing Rings
+            (x, y, t) => {
+                const cx = width / 2;
+                const cy = height / 2;
+                const dx = x - cx;
+                const dy = y - cy;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                return Math.sin(dist * 0.2 - t * 1.5) * Math.cos(Math.atan2(dy, dx) * 3 + t);
+            },
+            // Pattern 3: Drifting Sand (Dunes)
+            (x, y, t) => {
+                return Math.sin(x * 0.1 + t * 0.5) * Math.cos(y * 0.05 + t * 0.2) * Math.sin(x * 0.05 + y * 0.05);
+            }
+        ];
+
+        // Main Draw Loop
+        function draw() {
+            const t = frame * 0.015; 
+            let output = '';
+            const patternFunc = patterns[patternIndex];
+
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    let value = patternFunc(x, y, t);
+
+                    // Add Ripple Effect
+                    if (clickRipple.active) {
+                        const dx = x - clickRipple.x;
+                        const dy = y - clickRipple.y;
+                        const dist = Math.sqrt(dx*dx + dy*dy);
+                        const wave = Math.sin(dist * 0.5 - (frame - clickRipple.time) * 0.2);
+                        const decay = Math.max(0, 1 - (frame - clickRipple.time) / 60);
+                        value += wave * decay * 2;
+                    }
+
+                    // Map to characters
+                    let index = Math.floor((value + 1.5) * 1.5);
+                    if (index < 0) index = 0;
+                    if (index > CHARS.length - 1) index = CHARS.length - 1;
+
+                    output += CHARS[index];
+                }
+                output += '\n';
+            }
+
+            canvas.textContent = output;
+            frame++;
+            requestAnimationFrame(draw);
+        }
+
+        // Interactions
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+            patternIndex = (patternIndex + 1) % patterns.length;
+            
+            const rect = canvas.getBoundingClientRect();
+            // Calculate grid coordinates based on click
+            clickRipple.x = (e.clientX - rect.left) / FONT_SIZE;
+            clickRipple.y = (e.clientY - rect.top) / FONT_SIZE;
+            clickRipple.time = frame;
+            clickRipple.active = true;
+        });
+
+        // Hover effects
+        document.querySelectorAll('li').forEach(li => {
+            li.style.cursor = 'text';
+            li.addEventListener('mouseenter', () => li.style.color = '#000');
+            li.addEventListener('mouseleave', () => li.style.color = 'inherit');
+        });
+
+        // Add inputs to memories
+        document.querySelectorAll('.memory-item').forEach(div => {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'answer-space';
+            input.placeholder = '...';
+            div.appendChild(input);
+        });
+
+        // Start
+        draw();
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reflection: Mobile</title>
+    <style>
+        /* --- Typography Imports --- */
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;600&family=JetBrains+Mono:wght@300&display=swap');
+
+        /* --- Global Reset & Variables --- */
+        :root {
+            --bg-color: #F0EEE6;
+            --text-color: #333333;
+            --art-color: #A09E96;
+            --question-color: #333333;
+            --input-bg: rgba(255, 255, 255, 0.3);
+            --input-border: rgba(0, 0, 0, 0.1);
+            --input-focus: rgba(0, 0, 0, 0.2);
+        }
+
+        /* Dark mode color scheme */
+        body.dark-mode {
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --art-color: #5a5a5a;
+            --question-color: #e0e0e0;
+            --input-bg: rgba(0, 0, 0, 0.3);
+            --input-border: rgba(255, 255, 255, 0.1);
+            --input-focus: rgba(255, 255, 255, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- Background ASCII Art Layer --- */
+        #art-layer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: monospace;
+            font-size: 12px;
+            line-height: 1;
+            color: var(--art-color);
+            opacity: 0.08;
+            z-index: 0;
+            pointer-events: none;
+            white-space: pre;
+            user-select: none;
+        }
+
+        /* --- Main Content Container --- */
+        .content-container {
+            position: relative;
+            z-index: 10;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 20px 80px;
+            min-height: 100vh;
+        }
+
+        /* --- Header Styling --- */
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            font-weight: 600;
+            text-align: center;
+            margin: 0 0 0.5em 0;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 3em;
+            opacity: 0.7;
+            font-size: 0.95rem;
+        }
+
+        /* --- Section Styling --- */
+        h2 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 2.5em;
+            margin-bottom: 1.5em;
+            border-bottom: 2px solid var(--text-color);
+            padding-bottom: 0.5em;
+            opacity: 0.9;
+        }
+
+        /* --- Question & Answer Styling --- */
+        .question-item {
+            margin-bottom: 2em;
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1.05rem;
+            line-height: 1.5;
+            margin-bottom: 0.8em;
+            color: var(--question-color);
+        }
+
+        .answer-input {
+            width: 100%;
+            min-height: 60px;
+            padding: 12px 16px;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            line-height: 1.5;
+            resize: vertical;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .answer-input:focus {
+            border-color: var(--input-focus);
+            background: var(--input-bg);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .answer-input::placeholder {
+            color: var(--text-color);
+            opacity: 0.4;
+        }
+
+        /* --- Memories Grid --- */
+        .memories-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5em;
+        }
+
+        .memory-item {
+            margin-bottom: 0;
+        }
+
+        .memory-item .question-text {
+            font-weight: 600;
+            margin-bottom: 0.5em;
+        }
+
+        /* --- Theme Toggle --- */
+        #theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: 1px solid var(--text-color);
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--text-color);
+            padding: 8px 16px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: all 0.2s ease;
+            z-index: 100;
+            opacity: 0.6;
+            border-radius: 3px;
+        }
+
+        #theme-toggle:hover {
+            opacity: 1;
+            background: var(--text-color);
+            color: var(--bg-color);
+        }
+
+        /* --- Version Switch --- */
+        #version-switch {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: none;
+            border: 1px solid var(--text-color);
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--text-color);
+            padding: 8px 16px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: all 0.2s ease;
+            z-index: 100;
+            opacity: 0.6;
+            border-radius: 3px;
+            text-decoration: none;
+        }
+
+        #version-switch:hover {
+            opacity: 1;
+            background: var(--text-color);
+            color: var(--bg-color);
+        }
+
+        /* --- Mobile Optimizations --- */
+        @media (max-width: 480px) {
+            .content-container {
+                padding: 30px 16px 60px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            h2 {
+                font-size: 1.2rem;
+            }
+            
+            .question-text {
+                font-size: 1rem;
+            }
+            
+            .answer-input {
+                padding: 10px 14px;
+                font-size: 0.95rem;
+            }
+        }
+
+        /* --- Auto-resizing textarea --- */
+        .auto-resize {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Version Switch -->
+    <a href="/split-view.html" id="version-switch">DESKTOP</a>
+
+    <!-- Theme Toggle -->
+    <button id="theme-toggle" onclick="toggleDarkMode()">DARK</button>
+
+    <!-- Dynamic Background -->
+    <pre id="art-layer"></pre>
+
+    <!-- Main Content -->
+    <div class="content-container">
+        <h1>Modern Wisdom<br>Annual Review</h1>
+        <p class="subtitle">A structured reflection and planning workbook.</p>
+
+        <section id="review">
+            <h2>Review</h2>
+            <div class="question-group">
+                <div class="question-item">
+                    <div class="question-text">How has this year gone?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-1"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">What went well?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-2"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">What went badly?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-3"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">Why?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-4"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">What lessons did I learn?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-5"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">What habit or system accounted for most of my success?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-6"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">What are the most valuable ways I spend my time?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-7"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">How can I find more time for this?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-8"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">What brought me the most happiness?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-9"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">How can I help these activities to happen more often?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-10"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">Who are the people that had the greatest impact on me?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-11"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">How can I see and collaborate with them more?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-12"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">What did I expect to complete, but didn't?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-13"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">Is this still an important goal of mine? If so, how can I make future follow-through more likely?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-14"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">What are the least valuable ways I am spending my time?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-15"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">How can I prevent myself from continuing to spend time in this way?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-16"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">How have my goals or priorities shifted over the last few months?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-17"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">Is there anything I am still doing that is no longer in alignment? Why?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-18"></textarea>
+                </div>
+            </div>
+        </section>
+
+        <section id="memories">
+            <h2>Memories</h2>
+            <div class="memories-grid">
+                <div class="memory-item question-item">
+                    <div class="question-text">Best Surprise</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-1"></textarea>
+                </div>
+                <div class="memory-item question-item">
+                    <div class="question-text">Best Meal</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-2"></textarea>
+                </div>
+                <div class="memory-item question-item">
+                    <div class="question-text">Coolest New Experience</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-3"></textarea>
+                </div>
+                <div class="memory-item question-item">
+                    <div class="question-text">Favourite Weekend</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-4"></textarea>
+                </div>
+                <div class="memory-item question-item">
+                    <div class="question-text">Favourite First Meeting</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-5"></textarea>
+                </div>
+                <div class="memory-item question-item">
+                    <div class="question-text">Favourite New City</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-6"></textarea>
+                </div>
+                <div class="memory-item question-item">
+                    <div class="question-text">Favourite New Emotion</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-7"></textarea>
+                </div>
+                <div class="memory-item question-item">
+                    <div class="question-text">Favourite New Walk</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-8"></textarea>
+                </div>
+                <div class="memory-item question-item">
+                    <div class="question-text">Favourite New Friend</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-9"></textarea>
+                </div>
+                <div class="memory-item question-item">
+                    <div class="question-text">Favourite Tour</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-10"></textarea>
+                </div>
+                <div class="memory-item question-item">
+                    <div class="question-text">Favourite Day</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-11"></textarea>
+                </div>
+                <div class="memory-item question-item">
+                    <div class="question-text">Most Intense Week</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-12"></textarea>
+                </div>
+                <div class="memory-item question-item">
+                    <div class="question-text">Best Sex</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-13"></textarea>
+                </div>
+                <div class="memory-item question-item">
+                    <div class="question-text">Favourite Artist</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-14"></textarea>
+                </div>
+                <div class="memory-item question-item">
+                    <div class="question-text">Favourite Song</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-15"></textarea>
+                </div>
+                <div class="memory-item question-item">
+                    <div class="question-text">Favourite Quote</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-16"></textarea>
+                </div>
+            </div>
+        </section>
+
+        <section id="plan">
+            <h2>Plan</h2>
+            <div class="question-group">
+                <div class="question-item">
+                    <div class="question-text">What would I do this year if I wanted to make 85 year old me miserable?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-1"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">What would 85 year old me wish I did more of?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-2"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">What are the things I do to make my day go great?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-3"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">What things make my days go terribly?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-4"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">What do I think is productive that isn't?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-5"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">What is productive that I don't realise?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-6"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">What do I want to do less of with my time?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-7"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">What do I want to do more of with my time?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-8"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">What does an ideal normal day look like? Write it out.</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-9"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">What conversations do I need to have?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-10"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">What are the habits I'm committing to starting and stopping?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-11"></textarea>
+                </div>
+            </div>
+        </section>
+
+        <section id="final-thoughts">
+            <h2>Final Thoughts</h2>
+            <div class="question-group">
+                <div class="question-item">
+                    <div class="question-text">What would have had to have happened by the end of next year for me to look back on the year and consider it a success?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="final-1"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">Who do I need to become for next year's chapter of my life story to turn out the way I would write it?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="final-2"></textarea>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">Knowing what I know now, what advice would I give to myself 12 months ago?</div>
+                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="final-3"></textarea>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // =============================================
+        // ASCII BACKGROUND ANIMATION (Zen Wave)
+        // =============================================
+        const canvas = document.getElementById('art-layer');
+        let frame = 0;
+        
+        function drawArt() {
+            const width = 40;
+            const height = 20;
+            const t = frame * 0.02;
+            let output = '';
+
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    const value = Math.sin(x * 0.15 + t) * Math.cos(y * 0.15 - t * 0.5);
+                    
+                    if (value > 0.6) output += '█';
+                    else if (value > 0.3) output += '▓';
+                    else if (value > 0) output += '▒';
+                    else if (value > -0.2) output += '░';
+                    else output += '·';
+                }
+                output += '\n';
+            }
+            
+            canvas.textContent = output;
+            frame++;
+            requestAnimationFrame(drawArt);
+        }
+
+        // Start animation
+        drawArt();
+
+        // =============================================
+        // AUTO-RESIZING TEXTAREA FUNCTIONALITY
+        // =============================================
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+
+        // Set up auto-resize for all textareas
+        document.querySelectorAll('.auto-resize').forEach(textarea => {
+            // Initial resize
+            autoResize(textarea);
+            
+            // Resize on input
+            textarea.addEventListener('input', () => {
+                autoResize(textarea);
+                saveResponses();
+            });
+        });
+
+        // =============================================
+        // LOCAL STORAGE PERSISTENCE
+        // =============================================
+        const STORAGE_KEY = 'reflection-mobile-responses';
+        const THEME_KEY = 'reflection-mobile-theme';
+        let saveTimeout;
+
+        // Load saved responses on page load
+        function loadSavedResponses() {
+            const savedData = localStorage.getItem(STORAGE_KEY);
+            if (savedData) {
+                try {
+                    const responses = JSON.parse(savedData);
+                    document.querySelectorAll('.answer-input').forEach(input => {
+                        const key = input.getAttribute('data-key');
+                        if (responses[key]) {
+                            input.value = responses[key];
+                            autoResize(input);
+                        }
+                    });
+                } catch (e) {
+                    console.error('Failed to load saved responses:', e);
+                }
+            }
+        }
+
+        // Save responses with debounce
+        function saveResponses() {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                const responses = {};
+                document.querySelectorAll('.answer-input').forEach(input => {
+                    const key = input.getAttribute('data-key');
+                    responses[key] = input.value;
+                });
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(responses));
+            }, 500);
+        }
+
+        // =============================================
+        // DARK MODE TOGGLE
+        // =============================================
+        function toggleDarkMode() {
+            const body = document.body;
+            const themeBtn = document.getElementById('theme-toggle');
+            const isDark = body.classList.toggle('dark-mode');
+
+            themeBtn.textContent = isDark ? 'DARK' : 'LIGHT';
+
+            // Save preference to localStorage
+            localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
+        }
+
+        // Load saved theme preference
+        function loadTheme() {
+            const savedTheme = localStorage.getItem(THEME_KEY);
+            const themeBtn = document.getElementById('theme-toggle');
+
+            // Default to light mode on mobile
+            const isDark = savedTheme === 'dark';
+
+            if (isDark) {
+                document.body.classList.add('dark-mode');
+                themeBtn.textContent = 'DARK';
+            } else {
+                themeBtn.textContent = 'LIGHT';
+            }
+        }
+
+        // =============================================
+        // INITIALIZATION
+        // =============================================
+        window.addEventListener('load', () => {
+            loadTheme();
+            loadSavedResponses();
+            
+            // Trigger resize for all textareas after loading content
+            setTimeout(() => {
+                document.querySelectorAll('.auto-resize').forEach(autoResize);
+            }, 100);
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            document.querySelectorAll('.auto-resize').forEach(autoResize);
+        });
+
+        // Add click effect to background (optional nice touch)
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON') return;
+            frame += 10; // Create ripple effect in the background
+        });
+    </script>
+</body>
+</html>

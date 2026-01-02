@@ -377,7 +377,7 @@
             cursor: col-resize !important;
         }
 
-        /* Theme Toggle */
+/* Theme Toggle */
         #theme-toggle {
             position: fixed;
             top: 30px;
@@ -402,10 +402,40 @@
             background: var(--text-color);
             color: var(--bg-color);
         }
+
+        /* Version Switch */
+        #version-switch {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            background: none;
+            border: 1px solid var(--text-color);
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--text-color);
+            padding: 8px 16px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: all 0.2s ease;
+            z-index: 300;
+            opacity: 0.6;
+            border-radius: 3px;
+            text-decoration: none;
+        }
+
+        #version-switch:hover {
+            opacity: 1;
+            background: var(--text-color);
+            color: var(--bg-color);
+        }
     </style>
 </head>
 
 <body>
+    <!-- Version Switch -->
+    <a href="/mobile.html" id="version-switch">MOBILE</a>
+
     <!-- Theme Toggle -->
     <button id="theme-toggle" onclick="toggleDarkMode()">DARK</button>
 
