@@ -847,7 +847,7 @@
         // =============================================
         // DARK MODE TOGGLE
         // =============================================
-        const THEME_KEY = 'zenwriter-theme';
+        const THEME_KEY = 'reflection-global-theme';
 
         function toggleDarkMode() {
             const body = document.body;
@@ -861,12 +861,12 @@
             localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
         }
 
-        // Load saved theme preference (defaults to dark mode)
+// Load saved theme preference (defaults to dark mode)
         function loadTheme() {
             const savedTheme = localStorage.getItem(THEME_KEY);
             const themeBtn = document.getElementById('theme-toggle');
 
-            // Default to dark mode if no preference is saved
+            // Default to dark mode globally
             const isDark = savedTheme === null ? true : savedTheme === 'dark';
 
             if (isDark) {
@@ -878,6 +878,17 @@
         }
 
 
+
+// =============================================
+        // CROSS-VERSION THEME SYNC
+        // =============================================
+        
+        // Listen for theme changes from other tabs/pages
+        window.addEventListener('storage', (e) => {
+            if (e.key === THEME_KEY) {
+                loadTheme();
+            }
+        });
 
         // =============================================
         // INITIALIZATION

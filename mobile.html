@@ -533,7 +533,7 @@
         // LOCAL STORAGE PERSISTENCE
         // =============================================
         const STORAGE_KEY = 'reflection-mobile-responses';
-        const THEME_KEY = 'reflection-mobile-theme';
+        const THEME_KEY = 'reflection-global-theme';
         let saveTimeout;
 
         // Load saved responses on page load
@@ -587,8 +587,8 @@
             const savedTheme = localStorage.getItem(THEME_KEY);
             const themeBtn = document.getElementById('theme-toggle');
 
-            // Default to light mode on mobile
-            const isDark = savedTheme === 'dark';
+            // Default to dark mode globally
+            const isDark = savedTheme === null ? true : savedTheme === 'dark';
 
             if (isDark) {
                 document.body.classList.add('dark-mode');
@@ -597,6 +597,17 @@
                 themeBtn.textContent = 'LIGHT';
             }
         }
+
+        // =============================================
+        // CROSS-VERSION THEME SYNC
+        // =============================================
+        
+        // Listen for theme changes from other tabs/pages
+        window.addEventListener('storage', (e) => {
+            if (e.key === THEME_KEY) {
+                loadTheme();
+            }
+        });
 
         // =============================================
         // INITIALIZATION
