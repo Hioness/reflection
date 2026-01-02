@@ -612,7 +612,6 @@
             rightPanel.style.flex = `0 0 ${rightPercent}%`;
 
             // Trigger resize for ASCII animations
-            resizeLeftAscii();
             resizeRightAscii();
         }
 
@@ -627,97 +626,7 @@
             document.removeEventListener('touchend', stopDrag);
         }
 
-        // =============================================
-        // LEFT PANEL: ASCII ANIMATION (Multi-pattern)
-        // =============================================
-        const leftCanvas = document.getElementById('left-ascii-pre');
-        const FONT_SIZE = 14;
-        let leftWidth, leftHeight;
-        let leftFrame = 0;
-        let leftPatternIndex = 0;
-        let leftClickRipple = { x: -1000, y: -1000, time: -100, active: false };
 
-        const CHARS = ' ·░▒▓█';
-
-        const leftPatterns = [
-            // Pattern 0: Flowing Plasma
-            (x, y, t, w, h) => {
-                const u = x / w * 4;
-                const v = y / h * 4;
-                return Math.sin(u + t) * Math.cos(v + t * 0.5) + Math.sin((u + v) * 0.5 + t * 0.2);
-            },
-            // Pattern 1: Rain / Digital Falls
-            (x, y, t) => {
-                const speed = t * 2;
-                const colOffset = x * 132.1;
-                const val = Math.sin((y * 0.5) + speed + colOffset);
-                return val > 0.8 ? val * 2 : val;
-            },
-            // Pattern 2: Breathing Rings
-            (x, y, t, w, h) => {
-                const cx = w / 2;
-                const cy = h / 2;
-                const dx = x - cx;
-                const dy = y - cy;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                return Math.sin(dist * 0.2 - t * 1.5) * Math.cos(Math.atan2(dy, dx) * 3 + t);
-            },
-            // Pattern 3: Drifting Sand (Dunes)
-            (x, y, t) => {
-                return Math.sin(x * 0.1 + t * 0.5) * Math.cos(y * 0.05 + t * 0.2) * Math.sin(x * 0.05 + y * 0.05);
-            }
-        ];
-
-        function resizeLeftAscii() {
-            const panel = document.getElementById('left-panel');
-            leftWidth = Math.ceil(panel.offsetWidth / FONT_SIZE) + 2;
-            leftHeight = Math.ceil(panel.offsetHeight / FONT_SIZE) + 2;
-        }
-
-        function drawLeftAscii() {
-            const t = leftFrame * 0.015;
-            let output = '';
-            const patternFunc = leftPatterns[leftPatternIndex];
-
-            for (let y = 0; y < leftHeight; y++) {
-                for (let x = 0; x < leftWidth; x++) {
-                    let value = patternFunc(x, y, t, leftWidth, leftHeight);
-
-                    // Add Ripple Effect
-                    if (leftClickRipple.active) {
-                        const dx = x - leftClickRipple.x;
-                        const dy = y - leftClickRipple.y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        const wave = Math.sin(dist * 0.5 - (leftFrame - leftClickRipple.time) * 0.2);
-                        const decay = Math.max(0, 1 - (leftFrame - leftClickRipple.time) / 60);
-                        value += wave * decay * 2;
-                    }
-
-                    let index = Math.floor((value + 1.5) * 1.5);
-                    if (index < 0) index = 0;
-                    if (index > CHARS.length - 1) index = CHARS.length - 1;
-                    output += CHARS[index];
-                }
-                output += '\n';
-            }
-
-            leftCanvas.textContent = output;
-            leftFrame++;
-            requestAnimationFrame(drawLeftAscii);
-        }
-
-        // Left panel click handler
-        leftPanel.addEventListener('click', (e) => {
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
-            leftPatternIndex = (leftPatternIndex + 1) % leftPatterns.length;
-
-            const rect = leftPanel.getBoundingClientRect();
-            leftClickRipple.x = (e.clientX - rect.left) / FONT_SIZE;
-            leftClickRipple.y = (e.clientY - rect.top) / FONT_SIZE;
-            leftClickRipple.time = leftFrame;
-            leftClickRipple.active = true;
-        });
 
         // =============================================
         // RIGHT PANEL: ASCII ANIMATION (Zen Wave)
@@ -894,16 +803,13 @@
         // INITIALIZATION
         // =============================================
         window.addEventListener('resize', () => {
-            resizeLeftAscii();
             resizeRightAscii();
         });
 
         // Initial setup
         loadTheme();
         loadSavedContent();
-        resizeLeftAscii();
         resizeRightAscii();
-        // drawLeftAscii(); // Disabled - left background hidden
         drawRightAscii();
     </script>
 </body>

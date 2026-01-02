@@ -20,17 +20,12 @@
             const screenWidth = window.innerWidth;
             const isMobile = screenWidth < MOBILE_BREAKPOINT;
             
-            // Debug logging (remove in production)
-            console.log('Screen width:', screenWidth);
-            console.log('Is mobile:', isMobile);
-            console.log('Current path:', currentPath);
+
             
             // Redirect logic
             if (isMobile && !isMobilePage) {
-                console.log('Redirecting to mobile...');
                 window.location.href = MOBILE_URL;
             } else if (!isMobile && !isDesktopPage) {
-                console.log('Redirecting to desktop...');
                 window.location.href = DESKTOP_URL;
             }
         })();
