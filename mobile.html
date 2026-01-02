@@ -114,6 +114,7 @@
             line-height: 1.5;
             margin-bottom: 0.8em;
             color: var(--question-color);
+            cursor: pointer;
         }
 
         .answer-input {
@@ -210,6 +211,30 @@
             color: var(--bg-color);
         }
 
+        /* --- Tool Button --- */
+        .tool-btn {
+            background: none;
+            border: 1px solid var(--text-color);
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--text-color);
+            padding: 8px 16px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: all 0.2s ease;
+            opacity: 0.6;
+            border-radius: 3px;
+            margin-right: 1em;
+            margin-bottom: 1em;
+        }
+
+        .tool-btn:hover {
+            opacity: 1;
+            background: var(--text-color);
+            color: var(--bg-color);
+        }
+
         /* Container for toggle buttons */
         .toggle-container {
             text-align: center;
@@ -240,6 +265,14 @@
             }
         }
 
+        /* --- Memories Grid Responsive Layout --- */
+        @media (min-width: 600px) {
+            .memories-grid { 
+                grid-template-columns: 1fr 1fr; 
+                gap: 2em; 
+            }
+        }
+
         /* --- Auto-resizing textarea --- */
         .auto-resize {
             overflow: hidden;
@@ -255,7 +288,8 @@
     <div class="content-container">
         <!-- Toggle Container -->
         <div class="toggle-container">
-            <a href="/split-view.html" id="version-switch">DESKTOP</a>
+            <button class="tool-btn" onclick="exportResponses()" id="export-btn">Export</button>
+            <a href="/split-view.html" id="version-switch">Desktop View</a>
             <button id="theme-toggle" onclick="toggleDarkMode()">DARK</button>
         </div>
         
@@ -266,76 +300,76 @@
             <h2>Review</h2>
             <div class="question-group">
                 <div class="question-item">
-                    <div class="question-text">How has this year gone?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-1"></textarea>
+                    <label class="question-text" for="review-1">How has this year gone?</label>
+                    <textarea id="review-1" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-1"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">What went well?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-2"></textarea>
+                    <label class="question-text" for="review-2">What went well?</label>
+                    <textarea id="review-2" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-2"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">What went badly?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-3"></textarea>
+                    <label class="question-text" for="review-3">What went badly?</label>
+                    <textarea id="review-3" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-3"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">Why?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-4"></textarea>
+                    <label class="question-text" for="review-4">Why?</label>
+                    <textarea id="review-4" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-4"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">What lessons did I learn?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-5"></textarea>
+                    <label class="question-text" for="review-5">What lessons did I learn?</label>
+                    <textarea id="review-5" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-5"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">What habit or system accounted for most of my success?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-6"></textarea>
+                    <label class="question-text" for="review-6">What habit or system accounted for most of my success?</label>
+                    <textarea id="review-6" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-6"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">What are the most valuable ways I spend my time?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-7"></textarea>
+                    <label class="question-text" for="review-7">What are the most valuable ways I spend my time?</label>
+                    <textarea id="review-7" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-7"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">How can I find more time for this?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-8"></textarea>
+                    <label class="question-text" for="review-8">How can I find more time for this?</label>
+                    <textarea id="review-8" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-8"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">What brought me the most happiness?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-9"></textarea>
+                    <label class="question-text" for="review-9">What brought me the most happiness?</label>
+                    <textarea id="review-9" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-9"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">How can I help these activities to happen more often?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-10"></textarea>
+                    <label class="question-text" for="review-10">How can I help these activities to happen more often?</label>
+                    <textarea id="review-10" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-10"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">Who are the people that had the greatest impact on me?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-11"></textarea>
+                    <label class="question-text" for="review-11">Who are the people that had the greatest impact on me?</label>
+                    <textarea id="review-11" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-11"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">How can I see and collaborate with them more?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-12"></textarea>
+                    <label class="question-text" for="review-12">How can I see and collaborate with them more?</label>
+                    <textarea id="review-12" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-12"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">What did I expect to complete, but didn't?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-13"></textarea>
+                    <label class="question-text" for="review-13">What did I expect to complete, but didn't?</label>
+                    <textarea id="review-13" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-13"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">Is this still an important goal of mine? If so, how can I make future follow-through more likely?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-14"></textarea>
+                    <label class="question-text" for="review-14">Is this still an important goal of mine? If so, how can I make future follow-through more likely?</label>
+                    <textarea id="review-14" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-14"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">What are the least valuable ways I am spending my time?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-15"></textarea>
+                    <label class="question-text" for="review-15">What are the least valuable ways I am spending my time?</label>
+                    <textarea id="review-15" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-15"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">How can I prevent myself from continuing to spend time in this way?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-16"></textarea>
+                    <label class="question-text" for="review-16">How can I prevent myself from continuing to spend time in this way?</label>
+                    <textarea id="review-16" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-16"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">How have my goals or priorities shifted over the last few months?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-17"></textarea>
+                    <label class="question-text" for="review-17">How have my goals or priorities shifted over the last few months?</label>
+                    <textarea id="review-17" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-17"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">Is there anything I am still doing that is no longer in alignment? Why?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-18"></textarea>
+                    <label class="question-text" for="review-18">Is there anything I am still doing that is no longer in alignment? Why?</label>
+                    <textarea id="review-18" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="review-18"></textarea>
                 </div>
             </div>
         </section>
@@ -344,68 +378,68 @@
             <h2>Memories</h2>
             <div class="memories-grid">
                 <div class="memory-item question-item">
-                    <div class="question-text">Best Surprise</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-1"></textarea>
+                    <label class="question-text" for="memory-1">Best Surprise</label>
+                    <textarea id="memory-1" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-1"></textarea>
                 </div>
                 <div class="memory-item question-item">
-                    <div class="question-text">Best Meal</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-2"></textarea>
+                    <label class="question-text" for="memory-2">Best Meal</label>
+                    <textarea id="memory-2" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-2"></textarea>
                 </div>
                 <div class="memory-item question-item">
-                    <div class="question-text">Coolest New Experience</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-3"></textarea>
+                    <label class="question-text" for="memory-3">Coolest New Experience</label>
+                    <textarea id="memory-3" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-3"></textarea>
                 </div>
                 <div class="memory-item question-item">
-                    <div class="question-text">Favourite Weekend</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-4"></textarea>
+                    <label class="question-text" for="memory-4">Favourite Weekend</label>
+                    <textarea id="memory-4" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-4"></textarea>
                 </div>
                 <div class="memory-item question-item">
-                    <div class="question-text">Favourite First Meeting</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-5"></textarea>
+                    <label class="question-text" for="memory-5">Favourite First Meeting</label>
+                    <textarea id="memory-5" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-5"></textarea>
                 </div>
                 <div class="memory-item question-item">
-                    <div class="question-text">Favourite New City</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-6"></textarea>
+                    <label class="question-text" for="memory-6">Favourite New City</label>
+                    <textarea id="memory-6" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-6"></textarea>
                 </div>
                 <div class="memory-item question-item">
-                    <div class="question-text">Favourite New Emotion</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-7"></textarea>
+                    <label class="question-text" for="memory-7">Favourite New Emotion</label>
+                    <textarea id="memory-7" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-7"></textarea>
                 </div>
                 <div class="memory-item question-item">
-                    <div class="question-text">Favourite New Walk</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-8"></textarea>
+                    <label class="question-text" for="memory-8">Favourite New Walk</label>
+                    <textarea id="memory-8" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-8"></textarea>
                 </div>
                 <div class="memory-item question-item">
-                    <div class="question-text">Favourite New Friend</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-9"></textarea>
+                    <label class="question-text" for="memory-9">Favourite New Friend</label>
+                    <textarea id="memory-9" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-9"></textarea>
                 </div>
                 <div class="memory-item question-item">
-                    <div class="question-text">Favourite Tour</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-10"></textarea>
+                    <label class="question-text" for="memory-10">Favourite Tour</label>
+                    <textarea id="memory-10" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-10"></textarea>
                 </div>
                 <div class="memory-item question-item">
-                    <div class="question-text">Favourite Day</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-11"></textarea>
+                    <label class="question-text" for="memory-11">Favourite Day</label>
+                    <textarea id="memory-11" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-11"></textarea>
                 </div>
                 <div class="memory-item question-item">
-                    <div class="question-text">Most Intense Week</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-12"></textarea>
+                    <label class="question-text" for="memory-12">Most Intense Week</label>
+                    <textarea id="memory-12" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-12"></textarea>
                 </div>
                 <div class="memory-item question-item">
-                    <div class="question-text">Best Sex</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-13"></textarea>
+                    <label class="question-text" for="memory-13">Best Sex</label>
+                    <textarea id="memory-13" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-13"></textarea>
                 </div>
                 <div class="memory-item question-item">
-                    <div class="question-text">Favourite Artist</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-14"></textarea>
+                    <label class="question-text" for="memory-14">Favourite Artist</label>
+                    <textarea id="memory-14" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-14"></textarea>
                 </div>
                 <div class="memory-item question-item">
-                    <div class="question-text">Favourite Song</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-15"></textarea>
+                    <label class="question-text" for="memory-15">Favourite Song</label>
+                    <textarea id="memory-15" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-15"></textarea>
                 </div>
                 <div class="memory-item question-item">
-                    <div class="question-text">Favourite Quote</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-16"></textarea>
+                    <label class="question-text" for="memory-16">Favourite Quote</label>
+                    <textarea id="memory-16" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="memory-16"></textarea>
                 </div>
             </div>
         </section>
@@ -414,48 +448,48 @@
             <h2>Plan</h2>
             <div class="question-group">
                 <div class="question-item">
-                    <div class="question-text">What would I do this year if I wanted to make 85 year old me miserable?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-1"></textarea>
+                    <label class="question-text" for="plan-1">What would I do this year if I wanted to make 85 year old me miserable?</label>
+                    <textarea id="plan-1" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-1"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">What would 85 year old me wish I did more of?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-2"></textarea>
+                    <label class="question-text" for="plan-2">What would 85 year old me wish I did more of?</label>
+                    <textarea id="plan-2" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-2"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">What are the things I do to make my day go great?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-3"></textarea>
+                    <label class="question-text" for="plan-3">What are the things I do to make my day go great?</label>
+                    <textarea id="plan-3" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-3"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">What things make my days go terribly?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-4"></textarea>
+                    <label class="question-text" for="plan-4">What things make my days go terribly?</label>
+                    <textarea id="plan-4" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-4"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">What do I think is productive that isn't?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-5"></textarea>
+                    <label class="question-text" for="plan-5">What do I think is productive that isn't?</label>
+                    <textarea id="plan-5" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-5"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">What is productive that I don't realise?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-6"></textarea>
+                    <label class="question-text" for="plan-6">What is productive that I don't realise?</label>
+                    <textarea id="plan-6" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-6"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">What do I want to do less of with my time?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-7"></textarea>
+                    <label class="question-text" for="plan-7">What do I want to do less of with my time?</label>
+                    <textarea id="plan-7" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-7"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">What do I want to do more of with my time?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-8"></textarea>
+                    <label class="question-text" for="plan-8">What do I want to do more of with my time?</label>
+                    <textarea id="plan-8" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-8"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">What does an ideal normal day look like? Write it out.</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-9"></textarea>
+                    <label class="question-text" for="plan-9">What does an ideal normal day look like? Write it out.</label>
+                    <textarea id="plan-9" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-9"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">What conversations do I need to have?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-10"></textarea>
+                    <label class="question-text" for="plan-10">What conversations do I need to have?</label>
+                    <textarea id="plan-10" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-10"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">What are the habits I'm committing to starting and stopping?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-11"></textarea>
+                    <label class="question-text" for="plan-11">What are the habits I'm committing to starting and stopping?</label>
+                    <textarea id="plan-11" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="plan-11"></textarea>
                 </div>
             </div>
         </section>
@@ -464,16 +498,16 @@
             <h2>Final Thoughts</h2>
             <div class="question-group">
                 <div class="question-item">
-                    <div class="question-text">What would have had to have happened by the end of next year for me to look back on the year and consider it a success?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="final-1"></textarea>
+                    <label class="question-text" for="final-1">What would have had to have happened by the end of next year for me to look back on the year and consider it a success?</label>
+                    <textarea id="final-1" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="final-1"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">Who do I need to become for next year's chapter of my life story to turn out the way I would write it?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="final-2"></textarea>
+                    <label class="question-text" for="final-2">Who do I need to become for next year's chapter of my life story to turn out the way I would write it?</label>
+                    <textarea id="final-2" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="final-2"></textarea>
                 </div>
                 <div class="question-item">
-                    <div class="question-text">Knowing what I know now, what advice would I give to myself 12 months ago?</div>
-                    <textarea class="answer-input auto-resize" placeholder="Type your answer here..." data-key="final-3"></textarea>
+                    <label class="question-text" for="final-3">Knowing what I know now, what advice would I give to myself 12 months ago?</label>
+                    <textarea id="final-3" class="answer-input auto-resize" placeholder="Type your answer here..." data-key="final-3"></textarea>
                 </div>
             </div>
         </section>
@@ -570,6 +604,26 @@
                 });
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(responses));
             }, 500);
+        }
+
+        // =============================================
+        // EXPORT RESPONSES
+        // =============================================
+        function exportResponses() {
+            const responses = {};
+            document.querySelectorAll('.answer-input').forEach(input => {
+                const key = input.getAttribute('data-key');
+                const q = input.previousElementSibling.textContent.trim();
+                responses[key] = `## ${q}\n\n${input.value}\n\n---\n`;
+            });
+            const md = Object.values(responses).join('\n');
+            const btn = document.getElementById('export-btn');
+            navigator.clipboard.writeText(md).then(() => {
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Export', 1500);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
         }
 
         // =============================================
