@@ -77,7 +77,7 @@
             font-size: 2.2rem;
             font-weight: 600;
             text-align: center;
-            margin: 0 0 0.5em 0;
+            margin: 3em 0 0.5em 0;
             line-height: 1.2;
         }
 
@@ -161,9 +161,8 @@
 
         /* --- Theme Toggle --- */
         #theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
+            position: static;
+            display: inline-block;
             background: none;
             border: 1px solid var(--text-color);
             cursor: pointer;
@@ -174,9 +173,9 @@
             text-transform: uppercase;
             letter-spacing: 1.5px;
             transition: all 0.2s ease;
-            z-index: 100;
             opacity: 0.6;
             border-radius: 3px;
+            margin-bottom: 1em;
         }
 
         #theme-toggle:hover {
@@ -187,9 +186,7 @@
 
         /* --- Version Switch --- */
         #version-switch {
-            position: fixed;
-            top: 20px;
-            left: 20px;
+            display: inline-block;
             background: none;
             border: 1px solid var(--text-color);
             cursor: pointer;
@@ -200,16 +197,23 @@
             text-transform: uppercase;
             letter-spacing: 1.5px;
             transition: all 0.2s ease;
-            z-index: 100;
             opacity: 0.6;
             border-radius: 3px;
             text-decoration: none;
+            margin-right: 1em;
+            margin-bottom: 1em;
         }
 
         #version-switch:hover {
             opacity: 1;
             background: var(--text-color);
             color: var(--bg-color);
+        }
+
+        /* Container for toggle buttons */
+        .toggle-container {
+            text-align: center;
+            margin-bottom: 1em;
         }
 
         /* --- Mobile Optimizations --- */
@@ -244,17 +248,17 @@
 </head>
 <body>
 
-    <!-- Version Switch -->
-    <a href="/split-view.html" id="version-switch">DESKTOP</a>
-
-    <!-- Theme Toggle -->
-    <button id="theme-toggle" onclick="toggleDarkMode()">DARK</button>
-
     <!-- Dynamic Background -->
     <pre id="art-layer"></pre>
 
     <!-- Main Content -->
     <div class="content-container">
+        <!-- Toggle Container -->
+        <div class="toggle-container">
+            <a href="/split-view.html" id="version-switch">DESKTOP</a>
+            <button id="theme-toggle" onclick="toggleDarkMode()">DARK</button>
+        </div>
+        
         <h1>Modern Wisdom<br>Annual Review</h1>
         <p class="subtitle">A structured reflection and planning workbook.</p>
 
