@@ -15,9 +15,23 @@
             --text-color: #333333;
             --art-color-left: #999999;
             --art-color-right: #A09E96;
+            --toolbar-bg: rgba(240, 238, 230, 0.95);
+            --toolbar-text: #666;
+            --toolbar-text-hover: #000;
             --font-stack: 'Courier New', Courier, monospace;
             --divider-width: 6px;
             --min-panel-width: 300px;
+        }
+
+        /* Dark mode color scheme */
+        body.dark-mode {
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --art-color-left: #666666;
+            --art-color-right: #5a5a5a;
+            --toolbar-bg: rgba(26, 26, 26, 0.95);
+            --toolbar-text: #999;
+            --toolbar-text-hover: #fff;
         }
 
         * {
@@ -203,7 +217,7 @@
         }
 
         .panel-left li:hover {
-            color: #000;
+            opacity: 0.8;
         }
 
         .panel-left .memories-list {
@@ -231,7 +245,7 @@
         }
 
         .panel-left .memories-list li:hover {
-            color: #000;
+            opacity: 0.8;
         }
 
 
@@ -298,7 +312,7 @@
             margin-top: 1em;
             margin-bottom: 0.5em;
             font-weight: 600;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid var(--art-color-right);
             padding-bottom: 10px;
         }
 
@@ -317,10 +331,10 @@
             display: flex;
             gap: 15px;
             padding: 10px 20px;
-            background: rgba(240, 238, 230, 0.95);
+            background: var(--toolbar-bg);
             border-radius: 50px;
             opacity: 0;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.4s ease, background 0.3s ease;
             z-index: 200;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
@@ -336,14 +350,14 @@
             cursor: pointer;
             font-family: 'JetBrains Mono', monospace;
             font-size: 11px;
-            color: #666;
+            color: var(--toolbar-text);
             transition: color 0.2s;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         .tool-btn:hover {
-            color: #000;
+            color: var(--toolbar-text-hover);
         }
 
         .tool-separator {
@@ -362,10 +376,39 @@
         body.resizing * {
             cursor: col-resize !important;
         }
+
+        /* Theme Toggle */
+        #theme-toggle {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: none;
+            border: 1px solid var(--text-color);
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--text-color);
+            padding: 8px 16px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: all 0.2s ease;
+            z-index: 300;
+            opacity: 0.6;
+            border-radius: 3px;
+        }
+
+        #theme-toggle:hover {
+            opacity: 1;
+            background: var(--text-color);
+            color: var(--bg-color);
+        }
     </style>
 </head>
 
 <body>
+    <!-- Theme Toggle -->
+    <button id="theme-toggle" onclick="toggleDarkMode()">DARK</button>
+
     <div class="split-container">
         <!-- LEFT PANEL: Annual Review Template -->
         <div class="panel panel-left" id="left-panel">
@@ -771,6 +814,39 @@
         // Listen for input changes
         editor.addEventListener('input', saveContent);
 
+        // =============================================
+        // DARK MODE TOGGLE
+        // =============================================
+        const THEME_KEY = 'zenwriter-theme';
+
+        function toggleDarkMode() {
+            const body = document.body;
+            const themeBtn = document.getElementById('theme-toggle');
+            const isDark = body.classList.toggle('dark-mode');
+
+            // label = current state
+            themeBtn.textContent = isDark ? 'DARK' : 'LIGHT';
+
+            // Save preference to localStorage
+            localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
+        }
+
+        // Load saved theme preference (defaults to dark mode)
+        function loadTheme() {
+            const savedTheme = localStorage.getItem(THEME_KEY);
+            const themeBtn = document.getElementById('theme-toggle');
+
+            // Default to dark mode if no preference is saved
+            const isDark = savedTheme === null ? true : savedTheme === 'dark';
+
+            if (isDark) {
+                document.body.classList.add('dark-mode');
+                themeBtn.textContent = 'DARK';
+            } else {
+                themeBtn.textContent = 'LIGHT';
+            }
+        }
+
 
 
         // =============================================
@@ -782,6 +858,7 @@
         });
 
         // Initial setup
+        loadTheme();
         loadSavedContent();
         resizeLeftAscii();
         resizeRightAscii();
