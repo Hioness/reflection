@@ -607,6 +607,46 @@
         }
 
         // =============================================
+        // CLIPBOARD HELPER (with fallback)
+        // =============================================
+        function copyToClipboard(text, button, successText = 'Copied!') {
+            const originalText = button.textContent;
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    button.textContent = successText;
+                    setTimeout(() => button.textContent = originalText, 1500);
+                }).catch(() => {
+                    fallbackCopy(text, button, successText, originalText);
+                });
+            } else {
+                fallbackCopy(text, button, successText, originalText);
+            }
+        }
+
+        function fallbackCopy(text, button, successText, originalText) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
+            textarea.style.top = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+
+            try {
+                document.execCommand('copy');
+                button.textContent = successText;
+                setTimeout(() => button.textContent = originalText, 1500);
+            } catch (err) {
+                button.textContent = 'Copy failed';
+                setTimeout(() => button.textContent = originalText, 1500);
+            }
+
+            document.body.removeChild(textarea);
+        }
+
+        // =============================================
         // EXPORT RESPONSES
         // =============================================
         function exportResponses() {
@@ -618,12 +658,7 @@
             });
             const md = Object.values(responses).join('\n');
             const btn = document.getElementById('export-btn');
-            navigator.clipboard.writeText(md).then(() => {
-                btn.textContent = 'Copied!';
-                setTimeout(() => btn.textContent = 'Export', 1500);
-            }).catch(err => {
-                console.error('Failed to copy:', err);
-            });
+            copyToClipboard(md, btn, 'Copied!');
         }
 
         // =============================================

@@ -13,7 +13,6 @@
         :root {
             --bg-color: #F0EEE6;
             --text-color: #333333;
-            --art-color-left: #999999;
             --art-color-right: #A09E96;
             --toolbar-bg: rgba(240, 238, 230, 0.95);
             --toolbar-text: #666;
@@ -27,7 +26,6 @@
         body.dark-mode {
             --bg-color: #1a1a1a;
             --text-color: #e0e0e0;
-            --art-color-left: #666666;
             --art-color-right: #5a5a5a;
             --toolbar-bg: rgba(26, 26, 26, 0.95);
             --toolbar-text: #999;
@@ -121,22 +119,6 @@
             position: absolute;
             top: 0;
             left: 0;
-        }
-
-        #left-ascii {
-            display: none;
-            /* Hidden per user request */
-        }
-
-        #left-ascii pre {
-            color: var(--art-color-left);
-            opacity: 0.5;
-        }
-
-        #right-ascii {
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
         #right-ascii pre {
@@ -442,9 +424,6 @@
     <div class="split-container">
         <!-- LEFT PANEL: Annual Review Template -->
         <div class="panel panel-left" id="left-panel">
-            <div class="ascii-layer" id="left-ascii">
-                <pre id="left-ascii-pre"></pre>
-            </div>
             <div class="panel-content">
                 <h1>Modern Wisdom<br>Annual Review</h1>
                 <p class="subtitle">A structured reflection and planning workbook.</p>
@@ -698,21 +677,52 @@
         }
 
         // =============================================
+        // CLIPBOARD HELPER (with fallback)
+        // =============================================
+        function copyToClipboard(text, button, successText = 'Copied!') {
+            const originalText = button.textContent;
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    button.textContent = successText;
+                    setTimeout(() => button.textContent = originalText, 1500);
+                }).catch(() => {
+                    fallbackCopy(text, button, successText, originalText);
+                });
+            } else {
+                fallbackCopy(text, button, successText, originalText);
+            }
+        }
+
+        function fallbackCopy(text, button, successText, originalText) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
+            textarea.style.top = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+
+            try {
+                document.execCommand('copy');
+                button.textContent = successText;
+                setTimeout(() => button.textContent = originalText, 1500);
+            } catch (err) {
+                button.textContent = 'Copy failed';
+                setTimeout(() => button.textContent = originalText, 1500);
+            }
+
+            document.body.removeChild(textarea);
+        }
+
+        // =============================================
         // COPY FUNCTION
         // =============================================
         function copyContent() {
             const editor = document.getElementById('editor');
-            const text = editor.innerText;
             const btn = document.getElementById('copy-btn');
-
-            navigator.clipboard.writeText(text).then(() => {
-                btn.textContent = 'Copied!';
-                setTimeout(() => {
-                    btn.textContent = 'Copy';
-                }, 1500);
-            }).catch(err => {
-                console.error('Failed to copy:', err);
-            });
+            copyToClipboard(editor.innerText, btn);
         }
 
         // =============================================
