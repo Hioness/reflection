@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <rect width="192" height="192" fill="#F0EEE6"/>
+  <text x="35" y="125" font-family="Georgia, serif" font-size="85" font-weight="bold" fill="#333333">R</text>
+  <path d="M110 50 Q130 30 150 50 Q170 70 190 50" stroke="#A09E96" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <path d="M110 96 Q130 76 150 96 Q170 116 190 96" stroke="#A09E96" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <path d="M110 142 Q130 122 150 142 Q170 162 190 142" stroke="#A09E96" stroke-width="8" fill="none" stroke-linecap="round"/>
+</svg>

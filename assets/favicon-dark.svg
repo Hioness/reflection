@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Background -->
+  <rect width="32" height="32" fill="#1a1a1a" rx="4"/>
+  
+  <!-- Split view divider -->
+  <rect x="15" y="4" width="2" height="24" fill="#e0e0e0" opacity="0.3"/>
+  
+  <!-- Left panel: "R" for Reflection -->
+  <text x="6" y="22" font-family="Georgia, serif" font-size="18" font-weight="bold" fill="#e0e0e0">R</text>
+  
+  <!-- Right panel: wave lines -->
+  <path d="M20 10 Q22 8 24 10 Q26 12 28 10" stroke="#5a5a5a" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M20 16 Q22 14 24 16 Q26 18 28 16" stroke="#5a5a5a" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M20 22 Q22 20 24 22 Q26 24 28 22" stroke="#5a5a5a" stroke-width="2" fill="none" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,26 @@
+{
+  "name": "Reflection: Review & Write",
+  "short_name": "Reflection",
+  "description": "A minimalist web app for annual reflection and focused writing",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F0EEE6",
+  "theme_color": "#333333",
+  "icons": [
+    {
+      "src": "/assets/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "/assets/icon-192.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/assets/icon-512.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    }
+  ]
+}

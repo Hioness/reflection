@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#F0EEE6"/>
+  <text x="85" y="330" font-family="Georgia, serif" font-size="230" font-weight="bold" fill="#333333">R</text>
+  <path d="M290 130 Q350 60 410 130 Q470 200 530 130" stroke="#A09E96" stroke-width="22" fill="none" stroke-linecap="round"/>
+  <path d="M290 256 Q350 186 410 256 Q470 326 530 256" stroke="#A09E96" stroke-width="22" fill="none" stroke-linecap="round"/>
+  <path d="M290 382 Q350 312 410 382 Q470 452 530 382" stroke="#A09E96" stroke-width="22" fill="none" stroke-linecap="round"/>
+</svg>
