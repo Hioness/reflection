@@ -9,18 +9,20 @@ Live pages:
 - `blank.html` — Blank zen page (font cycle, word count, copy + download)
 - `split-view.html` / `mobile.html` — redirect stubs → `annual.html` (kept for old bookmarks + file://, plus Vercel 308s)
 
-## Fixes shipped (Oct 2026 pass)
+## What shipped
 
+**Oct 2026 — hub + hardening**
 - Shared `assets/css/shared.css` + `assets/js/shared.js`: theme, clipboard fallback, sanitize, auto-resize, debounced storage, download, ASCII animator, modern bold/italic/H1/H2 (no `execCommand` for formatting).
-- Early theme apply (no FOUC), button label = action (`Light` when dark).
-- Fonts via `<link preconnect>` not `@import`; meta description + OG.
+- Early theme apply (no FOUC), button label = action (`Light` when dark). First visit honors OS color-scheme; `?theme=light|dark` overrides + persists (handy for screenshots).
+- Fonts via `<link preconnect>` not `@import`; meta description + OG + twitter cards + OG image on every page.
 - Relative `./` links (works under subpaths).
 - ASCII pauses on `visibilitychange`, static when `prefers-reduced-motion`.
-- Toolbar visible on `pointer:coarse` + `:focus-within`; unified Annual stacks + 2-col memories grid.
+- Unified Annual (48 Q, progress bar, 2-col memories grid); legacy split/mobile fork collapsed to redirect stubs (meta + JS + Vercel 308s).
 - `innerHTML` restore sanitized (strips scripts, `on*`, `javascript:`).
 - Export **Copy** + **Download .md** everywhere; telos export matches `docs/telos-framework.md` schema.
-- PWA: PNG 192/512 + apple-touch 180px in `assets/icons/`, manifest uses relative paths + `maskable`.
-- `vercel.json`: `cleanUrls`, long cache for `/assets/*`, excludes `archive/**`, `temp/**`. Added `.gitignore`.
+- a11y: skip links, landmarks, labeled fields, live progress region, sticky bars capped, dark-mode contrast pass.
+- PWA: PNG 192/512 + apple-touch 180px in `assets/icons/`, SVG light/dark favicons + `favicon.ico`, manifest `id` + `start_url: /` + `maskable`.
+- `vercel.json`: `cleanUrls`, 308s for legacy URLs, long cache for `/assets/*`. `404.html`, `robots.txt`, `sitemap.xml`, MIT `LICENSE`, `.gitignore`.
 
 ## Telos format
 
@@ -41,13 +43,12 @@ reflection/
 ├── assets/
 │   ├── css/shared.css
 │   ├── js/shared.js
-│   ├── icons/*.png
-│   └── *.svg
-├── archive/            # Old versions (excluded from deploy)
+│   ├── icons/*.png      # generated from the SVGs below (rsvg-convert)
+│   └── *.svg            # vector sources (favicon, dark variant, icon art)
 ├── docs/
-│   └── telos-framework.md  # Telos schema notes (vendored from temp/)
+│   └── telos-framework.md  # Telos schema notes (vendored from gitignored temp/ scratch)
 ├── favicon.ico
-├── 404.html · robots.txt · sitemap.xml (set production domain)
+├── 404.html · robots.txt · sitemap.xml
 ├── LICENSE (MIT)
 ├── site.webmanifest
 └── vercel.json
@@ -62,7 +63,14 @@ python3 -m http.server 8000
 # open http://localhost:8000/
 ```
 
-No build step.
+No build step. Force a theme with `?theme=light` or `?theme=dark`.
+
+## Deployment
+
+1. Push to GitHub, connect the repo to Vercel, deploy.
+2. Set your production domain, then replace the placeholder (`https://reflection.vercel.app`) in `robots.txt` and `sitemap.xml` with it.
+
+`temp/` holds gitignored scratch (including the original telos notes); the committed copy lives at `docs/telos-framework.md`.
 
 ---
 *Stay reflective. Write better.*
