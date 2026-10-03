@@ -310,14 +310,29 @@ h2.section-title {
   border-radius: 999px;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
   margin-top: 2.5em;
+  max-width: 640px;
+  margin-inline: auto;
 }
+
+/* Dark-mode contrast: muted text needs more opacity on dark bg */
+body.dark-mode { --toolbar-text: #bbb; }
+body.dark-mode .tool-btn,
+body.dark-mode .btn-ghost { opacity: 0.85; }
+body.dark-mode .card p { opacity: 0.85; }
+body.dark-mode .card .go { opacity: 0.8; }
+body.dark-mode p.subtitle,
+body.dark-mode .section-hint { opacity: 0.8; }
+body.dark-mode footer.site-footer,
+body.dark-mode .hero-kicker,
+body.dark-mode .legacy-links,
+body.dark-mode #count { opacity: 0.75; }
 
 /* Writer */
 .writer {
-  min-height: 46vh;
+  min-height: 30vh;
   outline: none;
   width: 100%;
-  padding-bottom: 18vh;
+  padding-bottom: 4vh;
   line-height: 1.7;
 }
 

@@ -32,7 +32,7 @@
 </head>
 <body>
     <script>
-        (function(){try{var s=localStorage.getItem('reflection-global-theme');var d=s===null?true:s==='dark';if(d)document.body.classList.add('dark-mode');}catch(e){document.body.classList.add('dark-mode');}})();
+        (function(){try{var s=localStorage.getItem('reflection-global-theme');var q=new URLSearchParams(location.search).get('theme');var d=q==='dark'?true:q==='light'?false:s?s==='dark':!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches);if(d)document.body.classList.add('dark-mode');}catch(e){document.body.classList.add('dark-mode');}})();
     </script>
     <a class="skip-link" href="#main">Skip to content</a>
     <pre id="art" class="art-layer" aria-hidden="true"></pre>
@@ -51,8 +51,8 @@
         <div class="progress-wrap" role="status" aria-live="polite">
             <span id="progress-text">0 / 48</span>
             <div class="progress-bar"><i id="progress-fill"></i></div>
-            <button class="tool-btn" id="copy-btn" style="border:none">Copy</button>
-            <button class="tool-btn" id="download-btn" style="border:none">Save</button>
+            <button class="tool-btn" id="copy-btn">Copy</button>
+            <button class="tool-btn" id="download-btn">Save</button>
         </div>
 
         <div id="annual-root"></div>

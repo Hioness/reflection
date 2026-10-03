@@ -24,14 +24,14 @@
     <link rel="stylesheet" href="./assets/css/shared.css">
     <style>
         .writer-wrap { max-width: 640px; margin: 2em auto 0; }
-        #toolbar { display:flex; gap:14px; justify-content:center; align-items:center; padding:10px 20px; background:var(--toolbar-bg); border:1px solid var(--card-border); border-radius:999px; box-shadow:0 4px 20px rgba(0,0,0,.08); margin-top:2em; flex-wrap:wrap; }
+        #toolbar { display:flex; gap:14px; justify-content:center; align-items:center; padding:10px 20px; background:var(--toolbar-bg); border:1px solid var(--card-border); border-radius:999px; box-shadow:0 4px 20px rgba(0,0,0,.08); margin-top:2em; flex-wrap:wrap; position:sticky; bottom:12px; z-index:20; }
         #toolbar .sep { width:1px; height:12px; background:var(--art-color); opacity:.5; }
         #count { text-align:center; font-family:'JetBrains Mono',monospace; font-size:11px; opacity:.5; margin-top:1em; }
     </style>
 </head>
 <body>
     <script>
-        (function(){try{var s=localStorage.getItem('reflection-global-theme');var d=s===null?true:s==='dark';if(d)document.body.classList.add('dark-mode');}catch(e){document.body.classList.add('dark-mode');}})();
+        (function(){try{var s=localStorage.getItem('reflection-global-theme');var q=new URLSearchParams(location.search).get('theme');var d=q==='dark'?true:q==='light'?false:s?s==='dark':!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches);if(d)document.body.classList.add('dark-mode');}catch(e){document.body.classList.add('dark-mode');}})();
     </script>
     <a class="skip-link" href="#main">Skip to content</a>
     <pre id="art" class="art-layer" aria-hidden="true"></pre>
@@ -43,7 +43,6 @@
             <a class="btn-ghost" href="./telos.html">Telos</a>
             <button class="tool-btn" id="copy-btn">Copy</button>
             <button class="tool-btn" id="download-btn">Download</button>
-            <button class="tool-btn" id="font-btn">Mono</button>
             <button class="btn-ghost" data-theme-toggle onclick="toggleDarkMode()">Light</button>
         </div>
 
@@ -98,7 +97,8 @@
         editor.addEventListener('input', () => { persist(); updateCount(); });
 
         function syncFontBtns() {
-            document.getElementById('font-btn').textContent = names[fontIdx];
+            var b1 = document.getElementById('font-btn');
+            if (b1) b1.textContent = names[fontIdx];
             document.getElementById('font-btn2').textContent = names[fontIdx];
         }
         function cycleFont() {
@@ -109,7 +109,8 @@
             try { localStorage.setItem(FONT_KEY, String(fontIdx)); } catch (e) {}
             editor.focus();
         }
-        document.getElementById('font-btn').addEventListener('click', cycleFont);
+        var topFontBtn = document.getElementById('font-btn');
+        if (topFontBtn) topFontBtn.addEventListener('click', cycleFont);
         document.getElementById('font-btn2').addEventListener('click', cycleFont);
 
         document.querySelectorAll('[data-fmt]').forEach(b => {

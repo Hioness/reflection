@@ -23,7 +23,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;600&family=JetBrains+Mono:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./assets/css/shared.css">
     <script>
-        (function(){try{var s=localStorage.getItem('reflection-global-theme');var d=s===null?true:s==='dark';if(d)document.documentElement.classList.add('dark-pre');}catch(e){}})();
+        (function(){try{var s=localStorage.getItem('reflection-global-theme');var q=new URLSearchParams(location.search).get('theme');var d=q==='dark'?true:q==='light'?false:s?s==='dark':!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches);if(d)document.documentElement.classList.add('dark-pre');}catch(e){}})();
     </script>
     <style>
         html.dark-pre body { background:#1a1a1a; }
@@ -35,7 +35,7 @@
 </head>
 <body>
     <script>
-        (function(){try{var s=localStorage.getItem('reflection-global-theme');var d=s===null?true:s==='dark';if(d)document.body.classList.add('dark-mode');}catch(e){document.body.classList.add('dark-mode');}})();
+        (function(){try{var s=localStorage.getItem('reflection-global-theme');var q=new URLSearchParams(location.search).get('theme');var d=q==='dark'?true:q==='light'?false:s?s==='dark':!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches);if(d)document.body.classList.add('dark-mode');}catch(e){document.body.classList.add('dark-mode');}})();
     </script>
     <a class="skip-link" href="#main">Skip to content</a>
     <pre id="art" class="art-layer" aria-hidden="true"></pre>

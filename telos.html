@@ -25,7 +25,7 @@
 </head>
 <body>
     <script>
-        (function(){try{var s=localStorage.getItem('reflection-global-theme');var d=s===null?true:s==='dark';if(d)document.body.classList.add('dark-mode');}catch(e){document.body.classList.add('dark-mode');}})();
+        (function(){try{var s=localStorage.getItem('reflection-global-theme');var q=new URLSearchParams(location.search).get('theme');var d=q==='dark'?true:q==='light'?false:s?s==='dark':!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches);if(d)document.body.classList.add('dark-mode');}catch(e){document.body.classList.add('dark-mode');}})();
     </script>
     <a class="skip-link" href="#main">Skip to content</a>
     <pre id="art" class="art-layer" aria-hidden="true"></pre>

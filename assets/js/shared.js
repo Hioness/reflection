@@ -19,6 +19,7 @@
 
   function applyTheme(isDark) {
     document.body.classList.toggle('dark-mode', isDark);
+    try { document.documentElement.classList.toggle('dark-pre', isDark); } catch (e) {}
     document.querySelectorAll('[data-theme-toggle]').forEach(function (btn) {
       btn.textContent = isDark ? 'Light' : 'Dark';
       btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
@@ -27,6 +28,11 @@
   }
 
   function loadTheme() {
+    // ?theme=light|dark override (handy for QA/screenshots, persists like a toggle)
+    try {
+      var q = new URLSearchParams(window.location.search).get('theme');
+      if (q === 'light' || q === 'dark') { applyTheme(q === 'dark'); return; }
+    } catch (e) {}
     applyTheme(isDarkPreferred());
   }
 
