@@ -7,16 +7,16 @@ Live pages:
 - `annual.html` — Annual Review, unified responsive (48 Q, progress, `reflection-annual-v1`, auto-migrates `reflection-mobile-responses`)
 - `telos.html` — Telos Builder (Problems → Mission → Narratives → Goals → History → Challenges → Strategies → Logs → red-team prompt, exports `telos.md`)
 - `blank.html` — Blank zen page (font cycle, word count, copy + download)
-- `split-view.html` / `mobile.html` — deprecated legacy Annual variants (kept for old links, excluded from nav)
+- `split-view.html` / `mobile.html` — redirect stubs → `annual.html` (kept for old bookmarks + file://, plus Vercel 308s)
 
 ## Fixes shipped (Oct 2026 pass)
 
 - Shared `assets/css/shared.css` + `assets/js/shared.js`: theme, clipboard fallback, sanitize, auto-resize, debounced storage, download, ASCII animator, modern bold/italic/H1/H2 (no `execCommand` for formatting).
 - Early theme apply (no FOUC), button label = action (`Light` when dark).
 - Fonts via `<link preconnect>` not `@import`; meta description + OG.
-- Relative `./` links (works under subpaths), annual card auto-picks mobile/desktop by width.
+- Relative `./` links (works under subpaths).
 - ASCII pauses on `visibilitychange`, static when `prefers-reduced-motion`.
-- Toolbar visible on `pointer:coarse` + `:focus-within`; split-view stacks under 760px.
+- Toolbar visible on `pointer:coarse` + `:focus-within`; unified Annual stacks + 2-col memories grid.
 - `innerHTML` restore sanitized (strips scripts, `on*`, `javascript:`).
 - Export **Copy** + **Download .md** everywhere; telos export matches `temp/telos-info.md` schema.
 - PWA: PNG 192/512 + apple-touch 180px in `assets/icons/`, manifest uses relative paths + `maskable`.
@@ -33,10 +33,11 @@ Based on `temp/telos-info.md` (NetworkChuck / Daniel Miessler): Problems, Missio
 ```
 reflection/
 ├── index.html          # Landing chooser
+├── annual.html         # Annual review (unified, responsive)
 ├── telos.html          # Telos builder (responsive)
 ├── blank.html          # Blank writer (responsive)
-├── mobile.html         # Annual — mobile inputs (legacy, patched)
-├── split-view.html     # Annual — desktop split (legacy, patched)
+├── mobile.html         # Redirect → annual.html (legacy bookmark)
+├── split-view.html     # Redirect → annual.html (legacy bookmark)
 ├── assets/
 │   ├── css/shared.css
 │   ├── js/shared.js

@@ -1,6 +1,12 @@
 {
   "cleanUrls": true,
   "rewrites": [{ "source": "/", "destination": "/index.html" }],
+  "redirects": [
+    { "source": "/split-view.html", "destination": "/annual.html", "permanent": true },
+    { "source": "/split-view", "destination": "/annual.html", "permanent": true },
+    { "source": "/mobile.html", "destination": "/annual.html", "permanent": true },
+    { "source": "/mobile", "destination": "/annual.html", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",
