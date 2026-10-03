@@ -3,47 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reflection: Review & Write</title>
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
-    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.svg">
-    <link rel="manifest" href="/site.webmanifest">
+    <title>Reflection — Choose your practice</title>
+    <meta name="description" content="Reflection — a minimalist space for annual review, telos building, and free writing. No accounts, saved locally.">
+    <meta property="og:title" content="Reflection — Choose your practice">
+    <meta property="og:description" content="Annual review, telos builder, and blank canvas. Minimal, local-first.">
+    <meta property="og:type" content="website">
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+    <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
+    <link rel="manifest" href="./site.webmanifest">
     <meta name="theme-color" content="#333333">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;600&family=JetBrains+Mono:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/shared.css">
     <script>
-        // Mobile detection and redirect
-        (function() {
-            const MOBILE_BREAKPOINT = 768; // px
-            const MOBILE_URL = '/mobile.html';
-            const DESKTOP_URL = '/split-view.html';
-            
-            // Check if we're already on the correct page
-            const currentPath = window.location.pathname;
-            const isMobilePage = currentPath.includes('mobile.html');
-            const isDesktopPage = currentPath.includes('split-view.html');
-            
-            // Get screen width
-            const screenWidth = window.innerWidth;
-            const isMobile = screenWidth < MOBILE_BREAKPOINT;
-            
-
-            
-            // Redirect logic
-            if (isMobile && !isMobilePage) {
-                window.location.href = MOBILE_URL;
-            } else if (!isMobile && !isDesktopPage) {
-                window.location.href = DESKTOP_URL;
-            }
-        })();
+        (function(){try{var s=localStorage.getItem('reflection-global-theme');var d=s===null?true:s==='dark';if(d)document.documentElement.classList.add('dark-pre');}catch(e){}})();
     </script>
+    <style>
+        html.dark-pre body { background:#1a1a1a; }
+        .hero-kicker { text-align:center; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; opacity:.6; margin-top:1em; }
+        .legacy-links { text-align:center; margin-top:2.5em; font-size:.85rem; opacity:.6; }
+        .legacy-links a { color:inherit; }
+        footer { text-align:center; margin-top:3em; font-size:.8rem; opacity:.5; }
+    </style>
 </head>
 <body>
-    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: system-ui, sans-serif; color: #666;">
-        <div style="text-align: center;">
-            <div style="font-size: 2rem; margin-bottom: 1rem;">⏳</div>
-            <div>Redirecting to the appropriate version...</div>
+    <script>
+        (function(){try{var s=localStorage.getItem('reflection-global-theme');var d=s===null?true:s==='dark';if(d)document.body.classList.add('dark-mode');}catch(e){document.body.classList.add('dark-mode');}})();
+    </script>
+    <pre id="art" class="art-layer" aria-hidden="true"></pre>
+
+    <div class="content-container wide">
+        <div class="toggle-container">
+            <a class="btn-ghost" href="./split-view.html" id="annual-link">Annual</a>
+            <a class="btn-ghost" href="./telos.html">Telos</a>
+            <a class="btn-ghost" href="./blank.html">Blank</a>
+            <button class="btn-ghost" data-theme-toggle onclick="toggleDarkMode()">Light</button>
         </div>
+
+        <div class="hero-kicker">Reflection · Review &amp; Write</div>
+        <h1 class="title">Choose your practice</h1>
+        <p class="subtitle">Three quiet rooms. Pick one. Everything stays in your browser.</p>
+
+        <div class="card-grid">
+            <a class="card" href="./split-view.html" data-annual-card>
+                <div class="emoji">🪞</div>
+                <h3>Annual Review</h3>
+                <p>Modern Wisdom year-end questions + memories + plan. Structured on mobile, split writer on desktop.</p>
+                <span class="go">Open →</span>
+            </a>
+            <a class="card" href="./telos.html">
+                <div class="emoji">🧭</div>
+                <h3>Telos Builder</h3>
+                <p>Problems → mission → narratives → goals → logs. Draft a <code>telos.md</code> you can feed to an LLM for red-teaming.</p>
+                <span class="go">Open →</span>
+            </a>
+            <a class="card" href="./blank.html">
+                <div class="emoji">📄</div>
+                <h3>Blank Page</h3>
+                <p>Just write. Serif / sans / mono, copy + download. For morning pages and everything else.</p>
+                <span class="go">Open →</span>
+            </a>
+        </div>
+
+        <div class="legacy-links">
+            Annual auto-routes by screen width. Direct: <a href="./split-view.html">desktop</a> · <a href="./mobile.html">mobile</a>
+        </div>
+
+        <footer>Stay reflective. Write better. — no accounts, localStorage only</footer>
     </div>
+
+    <script src="./assets/js/shared.js"></script>
+    <script>
+        ReflectionTheme.loadTheme();
+        var anim = createAsciiAnimator(document.getElementById('art'), { width: 44, height: 22 });
+        document.addEventListener('click', function(e){
+            if (e.target.closest('a,button,textarea,input')) return;
+            anim.addEnergy(10);
+        });
+        // Annual card: route to mobile/desktop variant by width
+        (function(){
+            var card = document.querySelector('[data-annual-card]');
+            var link = document.getElementById('annual-link');
+            function pick(){ return window.innerWidth < 768 ? './mobile.html' : './split-view.html'; }
+            if (card) card.setAttribute('href', pick());
+            if (link) link.setAttribute('href', pick());
+            window.addEventListener('resize', function(){
+                if (card) card.setAttribute('href', pick());
+                if (link) link.setAttribute('href', pick());
+            });
+        })();
+    </script>
 </body>
 </html>

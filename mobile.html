@@ -10,9 +10,15 @@
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.svg">
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#333333">
+    <meta name="description" content="Reflection — a minimalist annual review, telos builder, and zen writing space. No accounts, saved locally.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;600&family=JetBrains+Mono:wght@300&display=swap" rel="stylesheet">
+    <script>
+        // Early theme: prevent FOUC, default dark
+        (function(){try{var s=localStorage.getItem('reflection-global-theme');var d=s===null?true:s==='dark';if(d)document.documentElement.classList.add('dark-pre');}catch(e){}})();
+    </script>
     <style>
-        /* --- Typography Imports --- */
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;600&family=JetBrains+Mono:wght@300&display=swap');
 
         /* --- Global Reset & Variables --- */
         :root {
@@ -286,6 +292,10 @@
     </style>
 </head>
 <body>
+    <script>
+        // Apply saved theme before first paint (prevents FOUC)
+        (function(){try{var s=localStorage.getItem('reflection-global-theme');var d=s===null?true:s==='dark';if(d)document.body.classList.add('dark-mode');}catch(e){document.body.classList.add('dark-mode');}})();
+    </script>
 
     <!-- Dynamic Background -->
     <pre id="art-layer"></pre>
@@ -295,8 +305,9 @@
         <!-- Toggle Container -->
         <div class="toggle-container">
             <button class="tool-btn" onclick="exportResponses()" id="export-btn">Export</button>
-            <a href="/split-view.html" id="version-switch">Desktop View</a>
-            <button id="theme-toggle" onclick="toggleDarkMode()">DARK</button>
+            <button class="tool-btn" onclick="downloadResponses()" id="download-btn">Download</button>
+            <a href="./split-view.html" id="version-switch">Desktop View</a>
+            <button id="theme-toggle" onclick="toggleDarkMode()" data-theme-toggle>DARK</button>
         </div>
         
         <h1>Modern Wisdom<br>Annual Review</h1>
@@ -525,8 +536,27 @@
         // =============================================
         const canvas = document.getElementById('art-layer');
         let frame = 0;
+        let artRunning = true;
+        const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function drawArtStatic() {
+            const width = 40; const height = 20; let output = '';
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    const value = Math.sin(x * 0.15) * Math.cos(y * 0.15);
+                    if (value > 0.6) output += '█';
+                    else if (value > 0.3) output += '▓';
+                    else if (value > 0) output += '▒';
+                    else if (value > -0.2) output += '░';
+                    else output += '·';
+                }
+                output += '\n';
+            }
+            canvas.textContent = output;
+        }
         
         function drawArt() {
+            if (!artRunning) return;
             const width = 40;
             const height = 20;
             const t = frame * 0.02;
@@ -550,8 +580,15 @@
             requestAnimationFrame(drawArt);
         }
 
-        // Start animation
-        drawArt();
+        // Start animation (paused when hidden, static if reduced-motion)
+        if (reduceMotion) { drawArtStatic(); }
+        else {
+            drawArt();
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) { artRunning = false; }
+                else if (!artRunning) { artRunning = true; drawArt(); }
+            });
+        }
 
         // =============================================
         // AUTO-RESIZING TEXTAREA FUNCTIONALITY
@@ -659,12 +696,34 @@
             const responses = {};
             document.querySelectorAll('.answer-input').forEach(input => {
                 const key = input.getAttribute('data-key');
-                const q = input.previousElementSibling.textContent.trim();
+                const label = input.closest('.question-item')?.querySelector('.question-text');
+                const q = (label ? label.textContent : key).trim();
                 responses[key] = `## ${q}\n\n${input.value}\n\n---\n`;
             });
             const md = Object.values(responses).join('\n');
             const btn = document.getElementById('export-btn');
             copyToClipboard(md, btn, 'Copied!');
+        }
+
+        function downloadResponses() {
+            const responses = {};
+            document.querySelectorAll('.answer-input').forEach(input => {
+                const key = input.getAttribute('data-key');
+                const label = input.closest('.question-item')?.querySelector('.question-text');
+                const q = (label ? label.textContent : key).trim();
+                responses[key] = `## ${q}\n\n${input.value}\n\n---\n`;
+            });
+            const md = `# Reflection Export — ${new Date().toISOString().slice(0,10)}\n\n` + Object.values(responses).join('\n');
+            const btn = document.getElementById('download-btn');
+            const orig = btn.textContent;
+            const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'reflection-annual-review.md';
+            document.body.appendChild(a); a.click();
+            setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
+            btn.textContent = 'Saved!';
+            setTimeout(() => btn.textContent = orig, 1500);
         }
 
         // =============================================
@@ -675,7 +734,7 @@
             const themeBtn = document.getElementById('theme-toggle');
             const isDark = body.classList.toggle('dark-mode');
 
-            themeBtn.textContent = isDark ? 'DARK' : 'LIGHT';
+            themeBtn.textContent = isDark ? 'LIGHT' : 'DARK';
 
             // Save preference to localStorage
             localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
@@ -691,9 +750,9 @@
 
             if (isDark) {
                 document.body.classList.add('dark-mode');
-                themeBtn.textContent = 'DARK';
-            } else {
                 themeBtn.textContent = 'LIGHT';
+            } else {
+                themeBtn.textContent = 'DARK';
             }
         }
 

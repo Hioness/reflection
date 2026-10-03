@@ -11,9 +11,11 @@
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.svg">
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#333333">
+    <meta name="description" content="Reflection — split view annual review plus zen writer. Resizable, dark mode, saved locally.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;600&family=JetBrains+Mono:wght@300&display=swap" rel="stylesheet">
     <style>
-        /* --- Typography Imports --- */
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;600&family=JetBrains+Mono:wght@300&display=swap');
 
         /* --- Global Reset & Variables --- */
         :root {
@@ -334,8 +336,25 @@
         }
 
         .panel-right:hover #toolbar,
-        #toolbar:hover {
+        #toolbar:hover,
+        #toolbar:focus-within {
             opacity: 1;
+        }
+
+        /* Touch devices have no hover — always show toolbar */
+        @media (pointer: coarse) {
+            #toolbar { opacity: 1; bottom: 16px; right: 16px; left: 16px; justify-content: center; border-radius: 16px; }
+        }
+
+        /* Narrow screens: stack instead of side-by-side */
+        @media (max-width: 760px) {
+            html, body { overflow: auto; }
+            .split-container { flex-direction: column; height: auto; min-height: 100vh; }
+            .panel-left, .panel-right { flex: 0 0 auto !important; min-width: 0; }
+            .panel-left .panel-content { padding: 40px 20px; }
+            .panel-right .panel-content { padding: 20px; }
+            #editor-container { height: auto; min-height: 60vh; }
+            .divider { display: none; }
         }
 
         .tool-btn {
@@ -427,11 +446,15 @@
 </head>
 
 <body>
+    <script>
+        // Apply saved theme before first paint (prevents FOUC)
+        (function(){try{var s=localStorage.getItem('reflection-global-theme');var d=s===null?true:s==='dark';if(d)document.body.classList.add('dark-mode');}catch(e){}})();
+    </script>
     <!-- Version Switch -->
-    <a href="/mobile.html" id="version-switch">MOBILE</a>
+    <a href="./mobile.html" id="version-switch">MOBILE</a>
 
     <!-- Theme Toggle -->
-    <button id="theme-toggle" onclick="toggleDarkMode()">DARK</button>
+    <button id="theme-toggle" data-theme-toggle onclick="toggleDarkMode()">DARK</button>
 
     <div class="split-container">
         <!-- LEFT PANEL: Annual Review Template -->
@@ -547,6 +570,7 @@
                     <button class="tool-btn" onclick="cycleFont()" id="font-btn">Mono</button>
                     <div class="tool-separator"></div>
                     <button class="tool-btn" onclick="copyContent()" id="copy-btn">Copy</button>
+                    <button class="tool-btn" onclick="downloadContent()" id="download-btn">Save</button>
                 </div>
             </div>
         </div>
@@ -625,6 +649,8 @@
         const rightCanvas = document.getElementById('right-ascii-pre');
         let rightWidth, rightHeight;
         let rightFrame = 0;
+        let rightRunning = true;
+        const rightReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         function resizeRightAscii() {
             // Fixed smaller size for centered, subtle background
@@ -632,7 +658,24 @@
             rightHeight = 20;
         }
 
+        function drawRightAsciiStatic() {
+            let output = '';
+            for (let y = 0; y < rightHeight; y++) {
+                for (let x = 0; x < rightWidth; x++) {
+                    const value = Math.sin(x * 0.15) * Math.cos(y * 0.15);
+                    if (value > 0.6) output += '█';
+                    else if (value > 0.3) output += '▓';
+                    else if (value > 0) output += '▒';
+                    else if (value > -0.2) output += '░';
+                    else output += '·';
+                }
+                output += '\n';
+            }
+            rightCanvas.textContent = output;
+        }
+
         function drawRightAscii() {
+            if (!rightRunning) return;
             const t = rightFrame * 0.02;
             let output = '';
 
@@ -654,21 +697,82 @@
             requestAnimationFrame(drawRightAscii);
         }
 
+        function startRightAscii() {
+            resizeRightAscii();
+            if (rightReduced) { drawRightAsciiStatic(); return; }
+            drawRightAscii();
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) { rightRunning = false; }
+                else if (!rightRunning) { rightRunning = true; drawRightAscii(); }
+            });
+        }
+
         // Right panel click effect
         rightPanel.addEventListener('mousedown', () => {
             rightFrame += 10;
         });
 
         // =============================================
-        // ZEN WRITER: Editor Functions
+        // ZEN WRITER: Editor Functions (modern, no execCommand)
         // =============================================
-        function format(command) {
-            if (command === 'h1' || command === 'h2') {
-                document.execCommand('formatBlock', false, command);
-            } else {
-                document.execCommand(command, false, null);
+        function wrapSelection(tagName) {
+            const sel = window.getSelection();
+            if (!sel || sel.rangeCount === 0) return;
+            const range = sel.getRangeAt(0);
+            if (range.collapsed) return;
+            const el = document.createElement(tagName);
+            try { range.surroundContents(el); }
+            catch (e) {
+                const frag = range.extractContents();
+                el.appendChild(frag);
+                range.insertNode(el);
             }
-            document.getElementById('editor').focus();
+            sel.removeAllRanges();
+        }
+
+        function toggleBlock(tagName) {
+            const sel = window.getSelection();
+            if (!sel || sel.rangeCount === 0) return;
+            const node = sel.anchorNode;
+            const el = node && node.nodeType === 3 ? node.parentElement : node;
+            const block = el ? el.closest('h1,h2,p,div') : null;
+            if (!block || !editor.contains(block)) return;
+            if (block.tagName.toLowerCase() === tagName) {
+                const p = document.createElement('p');
+                p.innerHTML = block.innerHTML;
+                block.replaceWith(p);
+            } else {
+                const h = document.createElement(tagName);
+                h.innerHTML = block.innerHTML;
+                block.replaceWith(h);
+                const r = document.createRange();
+                r.selectNodeContents(h);
+                sel.removeAllRanges();
+                sel.addRange(r);
+            }
+        }
+
+        function format(command) {
+            editor.focus();
+            if (command === 'bold') {
+                const a = window.getSelection()?.anchorNode?.parentElement;
+                const s = a ? a.closest('strong,b') : null;
+                if (s) {
+                    const parent = s.parentNode;
+                    while (s.firstChild) parent.insertBefore(s.firstChild, s);
+                    parent.removeChild(s);
+                } else wrapSelection('strong');
+            } else if (command === 'italic') {
+                const a = window.getSelection()?.anchorNode?.parentElement;
+                const em = a ? a.closest('em,i') : null;
+                if (em) {
+                    const parent = em.parentNode;
+                    while (em.firstChild) parent.insertBefore(em.firstChild, em);
+                    parent.removeChild(em);
+                } else wrapSelection('em');
+            } else if (command === 'h1') toggleBlock('h1');
+            else if (command === 'h2') toggleBlock('h2');
+            saveContent();
         }
 
         const fonts = ['font-mono', 'font-serif', 'font-sans'];
@@ -729,12 +833,26 @@
         }
 
         // =============================================
-        // COPY FUNCTION
+        // COPY + DOWNLOAD
         // =============================================
         function copyContent() {
             const editor = document.getElementById('editor');
             const btn = document.getElementById('copy-btn');
             copyToClipboard(editor.innerText, btn);
+        }
+
+        function downloadContent() {
+            const editor = document.getElementById('editor');
+            const btn = document.getElementById('download-btn');
+            const orig = btn ? btn.textContent : '';
+            const md = `# Zen Writing — ${new Date().toISOString().slice(0,10)}\n\n${editor.innerText}\n`;
+            const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'zen-writing.md';
+            document.body.appendChild(a); a.click();
+            setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
+            if (btn) { btn.textContent = 'Saved!'; setTimeout(() => btn.textContent = orig, 1500); }
         }
 
         // =============================================
@@ -744,11 +862,29 @@
         const editor = document.getElementById('editor');
         let saveTimeout;
 
-        // Load saved content on page load
+        // Load saved content on page load (sanitized)
+        function sanitizeInline(html) {
+            const tpl = document.createElement('template');
+            tpl.innerHTML = html || '';
+            tpl.content.querySelectorAll('script, style, iframe, object, embed, link, meta').forEach(n => n.remove());
+            const walker = document.createTreeWalker(tpl.content, NodeFilter.SHOW_ELEMENT);
+            const nodes = [];
+            while (walker.nextNode()) nodes.push(walker.currentNode);
+            nodes.forEach(el => {
+                Array.from(el.attributes || []).forEach(attr => {
+                    const name = attr.name.toLowerCase();
+                    const val = (attr.value || '').trim().toLowerCase();
+                    if (name.startsWith('on')) el.removeAttribute(attr.name);
+                    else if ((name === 'href' || name === 'src') && (val.startsWith('javascript:') || val.startsWith('data:text/html'))) el.removeAttribute(attr.name);
+                });
+            });
+            return tpl.innerHTML;
+        }
+
         function loadSavedContent() {
             const savedContent = localStorage.getItem(STORAGE_KEY);
             if (savedContent) {
-                editor.innerHTML = savedContent;
+                editor.innerHTML = sanitizeInline(savedContent);
             }
 
             // Load saved font preference
@@ -785,8 +921,8 @@
             const themeBtn = document.getElementById('theme-toggle');
             const isDark = body.classList.toggle('dark-mode');
 
-            // label = current state
-            themeBtn.textContent = isDark ? 'DARK' : 'LIGHT';
+            // label = action
+            themeBtn.textContent = isDark ? 'LIGHT' : 'DARK';
 
             // Save preference to localStorage
             localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
@@ -802,9 +938,9 @@
 
             if (isDark) {
                 document.body.classList.add('dark-mode');
-                themeBtn.textContent = 'DARK';
-            } else {
                 themeBtn.textContent = 'LIGHT';
+            } else {
+                themeBtn.textContent = 'DARK';
             }
         }
 
@@ -831,8 +967,7 @@
         // Initial setup
         loadTheme();
         loadSavedContent();
-        resizeRightAscii();
-        drawRightAscii();
+        startRightAscii();
     </script>
 </body>
 

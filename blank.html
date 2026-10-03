@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reflection — Blank Page</title>
+    <meta name="description" content="A distraction-free blank page. Three fonts, copy and download, saved locally.">
+    <meta property="og:title" content="Reflection — Blank Page">
+    <meta property="og:type" content="website">
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+    <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
+    <link rel="manifest" href="./site.webmanifest">
+    <meta name="theme-color" content="#333333">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;600&family=JetBrains+Mono:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/shared.css">
+    <style>
+        .writer-wrap { max-width: 640px; margin: 2em auto 0; }
+        #toolbar { display:flex; gap:14px; justify-content:center; align-items:center; padding:10px 20px; background:var(--toolbar-bg); border:1px solid var(--card-border); border-radius:999px; box-shadow:0 4px 20px rgba(0,0,0,.08); margin-top:2em; flex-wrap:wrap; }
+        #toolbar .sep { width:1px; height:12px; background:var(--art-color); opacity:.5; }
+        #count { text-align:center; font-family:'JetBrains Mono',monospace; font-size:11px; opacity:.5; margin-top:1em; }
+    </style>
+</head>
+<body>
+    <script>
+        (function(){try{var s=localStorage.getItem('reflection-global-theme');var d=s===null?true:s==='dark';if(d)document.body.classList.add('dark-mode');}catch(e){document.body.classList.add('dark-mode');}})();
+    </script>
+    <pre id="art" class="art-layer" aria-hidden="true"></pre>
+
+    <div class="content-container">
+        <div class="toggle-container">
+            <a class="btn-ghost" href="./index.html">← All</a>
+            <button class="tool-btn" id="copy-btn">Copy</button>
+            <button class="tool-btn" id="download-btn">Download</button>
+            <button class="tool-btn" id="font-btn">Mono</button>
+            <button class="btn-ghost" data-theme-toggle onclick="toggleDarkMode()">Light</button>
+        </div>
+
+        <h1 class="title">Blank page</h1>
+        <p class="subtitle">No prompts. Just write.</p>
+
+        <div class="writer-wrap">
+            <div id="editor" class="writer font-mono" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Blank writing page" placeholder="Start writing…"></div>
+            <div id="count">0 words</div>
+            <div id="toolbar">
+                <button class="tool-btn" data-fmt="bold">Bold</button>
+                <button class="tool-btn" data-fmt="italic">Italic</button>
+                <span class="sep"></span>
+                <button class="tool-btn" data-fmt="h1">H1</button>
+                <button class="tool-btn" data-fmt="h2">H2</button>
+                <span class="sep"></span>
+                <button class="tool-btn" id="font-btn2">Mono</button>
+                <span class="sep"></span>
+                <button class="tool-btn" id="clear-btn">Clear</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="./assets/js/shared.js"></script>
+    <script>
+        ReflectionTheme.loadTheme();
+        var anim = createAsciiAnimator(document.getElementById('art'), { width: 40, height: 20 });
+
+        const KEY = 'reflection-blank-v1';
+        const FONT_KEY = 'reflection-blank-font';
+        const editor = document.getElementById('editor');
+        const fonts = ['font-mono', 'font-serif', 'font-sans'];
+        const names = ['Mono', 'Serif', 'Sans'];
+        let fontIdx = 0;
+
+        // load
+        try {
+            const saved = localStorage.getItem(KEY);
+            if (saved) editor.innerHTML = sanitizeHTML(saved);
+            const f = parseInt(localStorage.getItem(FONT_KEY) || '0', 10);
+            if (f >= 0 && f < fonts.length) fontIdx = f;
+        } catch (e) {}
+        editor.classList.remove(...fonts);
+        editor.classList.add(fonts[fontIdx]);
+        syncFontBtns();
+        updateCount();
+
+        const persist = ReflectionStore.debounce(() => {
+            try { localStorage.setItem(KEY, editor.innerHTML); } catch (e) {}
+        }, 400);
+        editor.addEventListener('input', () => { persist(); updateCount(); });
+
+        function syncFontBtns() {
+            document.getElementById('font-btn').textContent = names[fontIdx];
+            document.getElementById('font-btn2').textContent = names[fontIdx];
+        }
+        function cycleFont() {
+            editor.classList.remove(fonts[fontIdx]);
+            fontIdx = (fontIdx + 1) % fonts.length;
+            editor.classList.add(fonts[fontIdx]);
+            syncFontBtns();
+            try { localStorage.setItem(FONT_KEY, String(fontIdx)); } catch (e) {}
+            editor.focus();
+        }
+        document.getElementById('font-btn').addEventListener('click', cycleFont);
+        document.getElementById('font-btn2').addEventListener('click', cycleFont);
+
+        document.querySelectorAll('[data-fmt]').forEach(b => {
+            b.addEventListener('click', () => {
+                modernFormat(editor, b.getAttribute('data-fmt'));
+                persist(); updateCount(); editor.focus();
+            });
+        });
+
+        function updateCount() {
+            const words = (editor.innerText || '').trim().split(/\s+/).filter(Boolean).length;
+            document.getElementById('count').textContent = words + (words === 1 ? ' word' : ' words');
+        }
+
+        document.getElementById('copy-btn').addEventListener('click', function() {
+            copyToClipboard(editor.innerText, this);
+        });
+        document.getElementById('download-btn').addEventListener('click', function() {
+            const btn = this; const o = btn.textContent;
+            downloadFile('blank-writing-' + new Date().toISOString().slice(0,10) + '.md',
+                '# Notes — ' + new Date().toISOString().slice(0,10) + '\n\n' + editor.innerText + '\n');
+            btn.textContent = 'Saved!'; setTimeout(() => btn.textContent = o, 1500);
+        });
+        document.getElementById('clear-btn').addEventListener('click', function() {
+            if (!editor.innerText.trim() || confirm('Clear this page? (saved copy is already in this browser only)')) {
+                editor.innerHTML = ''; updateCount(); persist(); editor.focus();
+            }
+        });
+    </script>
+</body>
+</html>
