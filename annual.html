@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reflection — Annual Review</title>
+    <meta name="description" content="Modern Wisdom annual review: 48 questions across Review, Memories, Plan, and Final Thoughts. Responsive, saved locally, exports markdown.">
+    <meta property="og:title" content="Reflection — Annual Review">
+    <meta property="og:type" content="website">
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+    <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
+    <link rel="manifest" href="./site.webmanifest">
+    <meta name="theme-color" content="#333333">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;600&family=JetBrains+Mono:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/shared.css">
+    <style>
+        .memories-grid { display:grid; grid-template-columns:1fr; gap:0 2em; }
+        @media (min-width:640px){ .memories-grid{ grid-template-columns:1fr 1fr; } }
+        .progress-wrap { position:sticky; top:10px; z-index:30; background:var(--toolbar-bg); border:1px solid var(--card-border); border-radius:999px; padding:8px 16px; display:flex; align-items:center; gap:12px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1px; box-shadow:0 4px 18px rgba(0,0,0,.08); }
+        .progress-bar { flex:1; height:6px; border-radius:99px; background:var(--input-border); overflow:hidden; }
+        .progress-bar i { display:block; height:100%; width:0%; background:var(--text-color); transition:width .3s ease; }
+    </style>
+</head>
+<body>
+    <script>
+        (function(){try{var s=localStorage.getItem('reflection-global-theme');var d=s===null?true:s==='dark';if(d)document.body.classList.add('dark-mode');}catch(e){document.body.classList.add('dark-mode');}})();
+    </script>
+    <pre id="art" class="art-layer" aria-hidden="true"></pre>
+
+    <div class="content-container">
+        <div class="toggle-container">
+            <a class="btn-ghost" href="./index.html">← All</a>
+            <a class="btn-ghost" href="./telos.html">Telos</a>
+            <a class="btn-ghost" href="./blank.html">Blank</a>
+            <button class="btn-ghost" data-theme-toggle onclick="toggleDarkMode()">Light</button>
+        </div>
+
+        <h1 class="title">Modern Wisdom<br>Annual Review</h1>
+        <p class="subtitle">A structured reflection and planning workbook. <span id="count-label"></span></p>
+
+        <div class="progress-wrap" role="status" aria-live="polite">
+            <span id="progress-text">0 / 48</span>
+            <div class="progress-bar"><i id="progress-fill"></i></div>
+            <button class="tool-btn" id="copy-btn" style="border:none">Copy</button>
+            <button class="tool-btn" id="download-btn" style="border:none">Save</button>
+        </div>
+
+        <div id="annual-root"></div>
+
+        <div class="action-bar">
+            <button class="btn-primary" id="copy-btn2">Copy markdown</button>
+            <button class="tool-btn" id="download-btn2">Download .md</button>
+            <button class="tool-btn" id="clear-btn">Clear</button>
+            <a class="btn-ghost" href="./index.html">← Home</a>
+        </div>
+        <p class="section-hint" style="text-align:center;margin-top:1.5em">Legacy links (auto-migrated): <a href="./split-view.html" style="color:inherit">desktop split</a> · <a href="./mobile.html" style="color:inherit">mobile</a></p>
+    </div>
+
+    <script src="./assets/js/shared.js"></script>
+    <script>
+        ReflectionTheme.loadTheme();
+        createAsciiAnimator(document.getElementById('art'), { width: 40, height: 20 });
+
+        const SECTIONS = [
+            { id: 'review', title: 'Review', hint: 'How did this year actually go?', questions: [
+                'How has this year gone?',
+                'What went well?',
+                'What went badly?',
+                'Why?',
+                'What lessons did I learn?',
+                'What habit or system accounted for most of my success?',
+                'What are the most valuable ways I spend my time?',
+                'How can I find more time for this?',
+                'What brought me the most happiness?',
+                'How can I help these activities to happen more often?',
+                'Who are the people that had the greatest impact on me?',
+                'How can I see and collaborate with them more?',
+                "What did I expect to complete, but didn't?",
+                'Is this still an important goal of mine? If so, how can I make future follow-through more likely?',
+                'What are the least valuable ways I am spending my time?',
+                'How can I prevent myself from continuing to spend time in this way?',
+                'How have my goals or priorities shifted over the last few months?',
+                'Is there anything I am still doing that is no longer in alignment? Why?'
+            ]},
+            { id: 'memories', title: 'Memories', hint: 'Small moments, grid view on desktop.', grid: true, questions: [
+                'Best Surprise','Best Meal','Coolest New Experience','Favourite Weekend',
+                'Favourite First Meeting','Favourite New City','Favourite New Emotion','Favourite New Walk',
+                'Favourite New Friend','Favourite Tour','Favourite Day','Most Intense Week',
+                'Best Sex','Favourite Artist','Favourite Song','Favourite Quote'
+            ]},
+            { id: 'plan', title: 'Plan', hint: 'Design next year on purpose.', questions: [
+                'What would I do this year if I wanted to make 85 year old me miserable?',
+                'What would 85 year old me wish I did more of?',
+                'What are the things I do to make my day go great?',
+                'What things make my days go terribly?',
+                "What do I think is productive that isn't?",
+                "What is productive that I don't realise?",
+                'What do I want to do less of with my time?',
+                'What do I want to do more of with my time?',
+                'What does an ideal normal day look like? Write it out.',
+                'What conversations do I need to have?',
+                "What are the habits I'm committing to starting and stopping?"
+            ]},
+            { id: 'final', title: 'Final Thoughts', hint: 'Close the loop.', questions: [
+                'What would have had to have happened by the end of next year for me to look back on the year and consider it a success?',
+                "Who do I need to become for next year's chapter of my life story to turn out the way I would write it?",
+                'Knowing what I know now, what advice would I give to myself 12 months ago?'
+            ]}
+        ];
+
+        const NEW_KEY = 'reflection-annual-v1';
+        const OLD_KEY = 'reflection-mobile-responses';
+
+        // migrate once: old mobile responses -> new unified key
+        function migrateIfEmpty(current) {
+            const hasAny = Object.values(current).some(v => (v || '').trim());
+            if (hasAny) return current;
+            try {
+                const old = JSON.parse(localStorage.getItem(OLD_KEY) || 'null');
+                if (old && typeof old === 'object') return old;
+            } catch (e) {}
+            return current;
+        }
+
+        let state = migrateIfEmpty(ReflectionStore.loadJSON(NEW_KEY, {}));
+        const root = document.getElementById('annual-root');
+        const inputs = [];
+
+        SECTIONS.forEach(sec => {
+            const section = document.createElement('section');
+            const h2 = document.createElement('h2');
+            h2.className = 'section-title'; h2.textContent = sec.title;
+            section.appendChild(h2);
+            if (sec.hint) {
+                const p = document.createElement('p');
+                p.className = 'section-hint'; p.textContent = sec.hint;
+                section.appendChild(p);
+            }
+            const group = document.createElement('div');
+            if (sec.grid) group.className = 'memories-grid';
+            sec.questions.forEach((q, i) => {
+                const key = sec.id + '-' + (i + 1);
+                const item = document.createElement('div');
+                item.className = 'question-item';
+                const label = document.createElement('label');
+                label.className = 'question-text';
+                label.textContent = q;
+                const n = SECTIONS.slice(0, SECTIONS.indexOf(sec)).reduce((a,s)=>a+s.questions.length,0) + i + 1;
+                label.setAttribute('for', 'q-' + n);
+                const ta = document.createElement('textarea');
+                ta.className = 'answer-input auto-resize';
+                ta.id = 'q-' + n;
+                ta.placeholder = 'Type your answer here…';
+                ta.value = state[key] || '';
+                ta.addEventListener('input', () => {
+                    state[key] = ta.value;
+                    autoResize(ta);
+                    queueSave(); updateProgress();
+                });
+                item.appendChild(label); item.appendChild(ta);
+                group.appendChild(item);
+                inputs.push({ key, ta });
+            });
+            section.appendChild(group);
+            root.appendChild(section);
+        });
+
+        initAutoResize(document);
+        const persist = ReflectionStore.debounce(() => ReflectionStore.saveJSON(NEW_KEY, state), 400);
+        function queueSave(){ persist(); }
+
+        const TOTAL = inputs.length;
+        function updateProgress() {
+            const done = inputs.filter(o => (o.ta.value || '').trim()).length;
+            document.getElementById('progress-text').textContent = done + ' / ' + TOTAL;
+            document.getElementById('progress-fill').style.width = (TOTAL ? (done / TOTAL * 100) : 0) + '%';
+            document.getElementById('count-label').textContent = done === TOTAL ? 'Complete.' : done + ' of ' + TOTAL + ' answered.';
+        }
+        updateProgress();
+        // save migrated data so refresh keeps it under new key
+        ReflectionStore.saveJSON(NEW_KEY, state);
+
+        function buildMd() {
+            let out = '# Modern Wisdom Annual Review — ' + new Date().toISOString().slice(0,10) + '\n\n';
+            SECTIONS.forEach(sec => {
+                out += '## ' + sec.title + '\n\n';
+                sec.questions.forEach((q, i) => {
+                    const key = sec.id + '-' + (i + 1);
+                    const v = (state[key] || '').trim();
+                    out += '### ' + q + '\n\n' + (v || '_—_') + '\n\n';
+                });
+            });
+            return out;
+        }
+
+        [['copy-btn', 'Copied!'], ['copy-btn2', 'Copied!']].forEach(([id, ok]) => {
+            const b = document.getElementById(id);
+            if (b) b.addEventListener('click', () => copyToClipboard(buildMd(), b, ok));
+        });
+        [['download-btn'], ['download-btn2']].forEach(([id]) => {
+            const b = document.getElementById(id);
+            if (b) b.addEventListener('click', () => {
+                downloadFile('annual-review-' + new Date().toISOString().slice(0,10) + '.md', buildMd());
+                const o = b.textContent; b.textContent = 'Saved!';
+                setTimeout(() => b.textContent = o, 1500);
+            });
+        });
+        document.getElementById('clear-btn').addEventListener('click', () => {
+            if (!confirm('Clear all 48 answers in this unified view? (Legacy copies stay untouched.)')) return;
+            state = {}; inputs.forEach(o => { o.ta.value = ''; autoResize(o.ta); });
+            queueSave(); updateProgress();
+        });
+    </script>
+</body>
+</html>

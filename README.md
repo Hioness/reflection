@@ -4,9 +4,10 @@ A minimalist, atmospheric web app for reflection and focused writing — now wit
 
 Live pages:
 - `index.html` — landing / chooser (Annual · Telos · Blank)
-- `split-view.html` / `mobile.html` — Annual Review (desktop split writer / mobile inputs)
+- `annual.html` — Annual Review, unified responsive (48 Q, progress, `reflection-annual-v1`, auto-migrates `reflection-mobile-responses`)
 - `telos.html` — Telos Builder (Problems → Mission → Narratives → Goals → History → Challenges → Strategies → Logs → red-team prompt, exports `telos.md`)
 - `blank.html` — Blank zen page (font cycle, word count, copy + download)
+- `split-view.html` / `mobile.html` — deprecated legacy Annual variants (kept for old links, excluded from nav)
 
 ## Fixes shipped (Oct 2026 pass)
 

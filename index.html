@@ -35,7 +35,7 @@
 
     <div class="content-container wide">
         <div class="toggle-container">
-            <a class="btn-ghost" href="./split-view.html" id="annual-link">Annual</a>
+            <a class="btn-ghost" href="./annual.html" id="annual-link">Annual</a>
             <a class="btn-ghost" href="./telos.html">Telos</a>
             <a class="btn-ghost" href="./blank.html">Blank</a>
             <button class="btn-ghost" data-theme-toggle onclick="toggleDarkMode()">Light</button>
@@ -46,7 +46,7 @@
         <p class="subtitle">Three quiet rooms. Pick one. Everything stays in your browser.</p>
 
         <div class="card-grid">
-            <a class="card" href="./split-view.html" data-annual-card>
+            <a class="card" href="./annual.html" data-annual-card>
                 <div class="emoji">🪞</div>
                 <h3>Annual Review</h3>
                 <p>Modern Wisdom year-end questions + memories + plan. Structured on mobile, split writer on desktop.</p>
@@ -67,7 +67,7 @@
         </div>
 
         <div class="legacy-links">
-            Annual auto-routes by screen width. Direct: <a href="./split-view.html">desktop</a> · <a href="./mobile.html">mobile</a>
+            Unified responsive page. Legacy: <a href="./split-view.html">desktop split</a> · <a href="./mobile.html">mobile inputs</a>
         </div>
 
         <footer>Stay reflective. Write better. — no accounts, localStorage only</footer>
@@ -81,17 +81,10 @@
             if (e.target.closest('a,button,textarea,input')) return;
             anim.addEnergy(10);
         });
-        // Annual card: route to mobile/desktop variant by width
+        // Annual is now unified; legacy split/mobile remain as deprecated direct links below
         (function(){
-            var card = document.querySelector('[data-annual-card]');
             var link = document.getElementById('annual-link');
-            function pick(){ return window.innerWidth < 768 ? './mobile.html' : './split-view.html'; }
-            if (card) card.setAttribute('href', pick());
-            if (link) link.setAttribute('href', pick());
-            window.addEventListener('resize', function(){
-                if (card) card.setAttribute('href', pick());
-                if (link) link.setAttribute('href', pick());
-            });
+            if (link) link.setAttribute('href', './annual.html');
         })();
     </script>
 </body>
