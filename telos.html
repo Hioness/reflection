@@ -7,11 +7,17 @@
     <meta name="description" content="Draft your telos.md: problems, mission, narratives, goals, history, challenges, strategies, and daily logs. Export markdown for LLM red-teaming.">
     <meta property="og:title" content="Reflection — Telos Builder">
     <meta property="og:description" content="Create a structured telos.md you can feed to an AI for coaching and blind-spot analysis.">
+    <meta name="twitter:card" content="summary">
     <meta property="og:type" content="website">
-    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon-dark.svg" media="(prefers-color-scheme: dark)">
     <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
     <link rel="manifest" href="./site.webmanifest">
     <meta name="theme-color" content="#333333">
+    <meta name="color-scheme" content="dark light">
+    <meta property="og:image" content="./assets/icons/icon-512.png">
+    <link rel="icon" href="./favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="192x192" href="./assets/icons/icon-192.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;600&family=JetBrains+Mono:wght@300&display=swap" rel="stylesheet">
@@ -21,11 +27,14 @@
     <script>
         (function(){try{var s=localStorage.getItem('reflection-global-theme');var d=s===null?true:s==='dark';if(d)document.body.classList.add('dark-mode');}catch(e){document.body.classList.add('dark-mode');}})();
     </script>
+    <a class="skip-link" href="#main">Skip to content</a>
     <pre id="art" class="art-layer" aria-hidden="true"></pre>
 
-    <div class="content-container">
+    <div class="content-container" id="main">
         <div class="toggle-container">
             <a class="btn-ghost" href="./index.html">← All</a>
+            <a class="btn-ghost" href="./annual.html">Annual</a>
+            <a class="btn-ghost" href="./blank.html">Blank</a>
             <button class="tool-btn" id="copy-btn">Copy .md</button>
             <button class="tool-btn" id="download-btn">Download</button>
             <button class="btn-ghost" data-theme-toggle onclick="toggleDarkMode()">Light</button>
@@ -38,7 +47,7 @@
             <h2 class="section-title">Problems</h2>
             <p class="section-hint">External problems or inefficiencies you want to solve. Not job titles — what’s broken in the world that you care about?</p>
             <div class="question-item">
-                <textarea id="f-problems" class="answer-input auto-resize" data-key="problems" placeholder="e.g. Junior devs drown in AI-generated code they can't evaluate…"></textarea>
+                <textarea id="f-problems" class="answer-input auto-resize" data-key="problems" aria-label="Problems you want to solve" placeholder="e.g. Junior devs drown in AI-generated code they can't evaluate…"></textarea>
             </div>
         </section>
 
@@ -89,7 +98,7 @@
             <h2 class="section-title">History &amp; Context</h2>
             <p class="section-hint">Formative background, failures, trajectory — what explains how you got here?</p>
             <div class="question-item">
-                <textarea id="f-history" class="answer-input auto-resize" data-key="history" placeholder="Career shifts, key failures, foundations…"></textarea>
+                <textarea id="f-history" class="answer-input auto-resize" data-key="history" aria-label="History and context" placeholder="Career shifts, key failures, foundations…"></textarea>
             </div>
         </section>
 
@@ -97,7 +106,7 @@
             <h2 class="section-title">Challenges &amp; Insecurities</h2>
             <p class="section-hint">Brutally honest bottlenecks, skill gaps, confidence hurdles.</p>
             <div class="question-item">
-                <textarea id="f-challenges" class="answer-input auto-resize" data-key="challenges" placeholder="What slows you down? What are you avoiding?"></textarea>
+                <textarea id="f-challenges" class="answer-input auto-resize" data-key="challenges" aria-label="Challenges and insecurities" placeholder="What slows you down? What are you avoiding?"></textarea>
             </div>
         </section>
 
@@ -105,7 +114,7 @@
             <h2 class="section-title">Strategies &amp; Projects</h2>
             <p class="section-hint">Systems, routines, and active builds to overcome the above.</p>
             <div class="question-item">
-                <textarea id="f-strategies" class="answer-input auto-resize" data-key="strategies" placeholder="Daily systems, projects in flight…"></textarea>
+                <textarea id="f-strategies" class="answer-input auto-resize" data-key="strategies" aria-label="Strategies and projects" placeholder="Daily systems, projects in flight…"></textarea>
             </div>
         </section>
 
@@ -116,7 +125,7 @@
                 <label for="log-date">Date</label>
                 <input id="log-date" type="date" class="answer-input" style="min-height:0">
                 <label for="log-text">Entry</label>
-                <textarea id="log-text" class="answer-input auto-resize" placeholder="Today I… friction was…"></textarea>
+                <textarea id="log-text" class="answer-input auto-resize" aria-label="New log entry" placeholder="Today I… friction was…"></textarea>
                 <div style="margin-top:.8em"><button class="tool-btn" id="add-log">+ Add entry</button></div>
             </div>
             <div id="logs-list"></div>
@@ -139,6 +148,7 @@
             <button class="tool-btn" id="download-btn2">Download</button>
             <a class="btn-ghost" href="./index.html">← Home</a>
         </div>
+        <footer class="site-footer">Stay reflective. Write better. — no accounts, localStorage only</footer>
     </div>
 
     <script src="./assets/js/shared.js"></script>
@@ -196,6 +206,7 @@
                 cb.addEventListener('change', () => { g.done = cb.checked; queueSave(); });
                 const ta = document.createElement('textarea');
                 ta.className = 'answer-input auto-resize';
+                ta.setAttribute('aria-label', 'Goal ' + (i + 1));
                 ta.placeholder = 'e.g. Ship telos.md draft by Oct 20';
                 ta.value = g.text || '';
                 ta.addEventListener('input', () => { g.text = ta.value; autoResize(ta); queueSave(); });
@@ -228,6 +239,7 @@
                 label.textContent = entry.date;
                 const ta = document.createElement('textarea');
                 ta.className = 'answer-input auto-resize';
+                ta.setAttribute('aria-label', 'Log entry for ' + entry.date);
                 ta.value = entry.text;
                 ta.addEventListener('input', () => { state.logs[idx].text = ta.value; autoResize(ta); queueSave(); });
                 const del = document.createElement('button');

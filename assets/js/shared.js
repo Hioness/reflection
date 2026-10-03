@@ -10,8 +10,10 @@
     try { saved = localStorage.getItem(THEME_KEY); } catch (e) {}
     if (saved === 'dark') return true;
     if (saved === 'light') return false;
-    // default: dark (matches legacy), but honor OS on first run if light explicitly preferred?
-    // Keep legacy default dark for continuity.
+    // No saved preference: honor OS, default dark otherwise
+    try {
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return false;
+    } catch (e) {}
     return true;
   }
 

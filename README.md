@@ -18,13 +18,13 @@ Live pages:
 - ASCII pauses on `visibilitychange`, static when `prefers-reduced-motion`.
 - Toolbar visible on `pointer:coarse` + `:focus-within`; unified Annual stacks + 2-col memories grid.
 - `innerHTML` restore sanitized (strips scripts, `on*`, `javascript:`).
-- Export **Copy** + **Download .md** everywhere; telos export matches `temp/telos-info.md` schema.
+- Export **Copy** + **Download .md** everywhere; telos export matches `docs/telos-framework.md` schema.
 - PWA: PNG 192/512 + apple-touch 180px in `assets/icons/`, manifest uses relative paths + `maskable`.
 - `vercel.json`: `cleanUrls`, long cache for `/assets/*`, excludes `archive/**`, `temp/**`. Added `.gitignore`.
 
 ## Telos format
 
-Based on `temp/telos-info.md` (NetworkChuck / Daniel Miessler): Problems, Missions (`I think one of the biggest problems is [X], which is why I am focusing on [Y].`), Narratives (8/15/30-sec), Goals (SMART checkboxes), History, Challenges, Strategies, Logs (`YYYY-MM-DD`), plus red-team prompt:
+Based on `docs/telos-framework.md` (NetworkChuck / Daniel Miessler, vendored from gitignored `temp/` scratch): Problems, Missions (`I think one of the biggest problems is [X], which is why I am focusing on [Y].`), Narratives (8/15/30-sec), Goals (SMART checkboxes), History, Challenges, Strategies, Logs (`YYYY-MM-DD`), plus red-team prompt:
 
 > Review my stated missions and goals against my daily logs. Identify my top three blind spots, call out where I am confusing busywork with actual progress, and highlight where my execution contradicts my stated priorities.
 
@@ -44,11 +44,16 @@ reflection/
 │   ├── icons/*.png
 │   └── *.svg
 ├── archive/            # Old versions (excluded from deploy)
+├── docs/
+│   └── telos-framework.md  # Telos schema notes (vendored from temp/)
+├── favicon.ico
+├── 404.html · robots.txt · sitemap.xml (set production domain)
+├── LICENSE (MIT)
 ├── site.webmanifest
 └── vercel.json
 ```
 
-Storage keys: `reflection-global-theme`, `reflection-telos-v1`, `reflection-blank-v1`, `reflection-mobile-responses` (legacy), `zenwriter-content` + `zenwriter-font` (legacy).
+Storage keys: `reflection-global-theme`, `reflection-annual-v1` (auto-migrates legacy `reflection-mobile-responses` once), `reflection-telos-v1`, `reflection-blank-v1` + `reflection-blank-font`.
 
 ## Getting Started
 

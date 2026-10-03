@@ -38,6 +38,29 @@ body.dark-mode {
 
 * { box-sizing: border-box; }
 
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 8px;
+  z-index: 100;
+  background: var(--text-color);
+  color: var(--bg-color);
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.skip-link:focus { left: 8px; }
+
+footer.site-footer {
+  text-align: center;
+  margin-top: 3em;
+  font-size: 0.8rem;
+  opacity: 0.5;
+}
+
 html, body {
   margin: 0;
   padding: 0;

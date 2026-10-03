@@ -6,11 +6,18 @@
     <title>Reflection — Annual Review</title>
     <meta name="description" content="Modern Wisdom annual review: 48 questions across Review, Memories, Plan, and Final Thoughts. Responsive, saved locally, exports markdown.">
     <meta property="og:title" content="Reflection — Annual Review">
+    <meta property="og:description" content="48 questions across Review, Memories, Plan, and Final Thoughts. Responsive, saved locally, exports markdown.">
+    <meta name="twitter:card" content="summary">
     <meta property="og:type" content="website">
-    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon-dark.svg" media="(prefers-color-scheme: dark)">
     <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
     <link rel="manifest" href="./site.webmanifest">
     <meta name="theme-color" content="#333333">
+    <meta name="color-scheme" content="dark light">
+    <meta property="og:image" content="./assets/icons/icon-512.png">
+    <link rel="icon" href="./favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="192x192" href="./assets/icons/icon-192.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;600&family=JetBrains+Mono:wght@300&display=swap" rel="stylesheet">
@@ -27,9 +34,10 @@
     <script>
         (function(){try{var s=localStorage.getItem('reflection-global-theme');var d=s===null?true:s==='dark';if(d)document.body.classList.add('dark-mode');}catch(e){document.body.classList.add('dark-mode');}})();
     </script>
+    <a class="skip-link" href="#main">Skip to content</a>
     <pre id="art" class="art-layer" aria-hidden="true"></pre>
 
-    <div class="content-container">
+    <div class="content-container" id="main">
         <div class="toggle-container">
             <a class="btn-ghost" href="./index.html">← All</a>
             <a class="btn-ghost" href="./telos.html">Telos</a>
@@ -55,7 +63,7 @@
             <button class="tool-btn" id="clear-btn">Clear</button>
             <a class="btn-ghost" href="./index.html">← Home</a>
         </div>
-        <p class="section-hint" style="text-align:center;margin-top:1.5em">Legacy links (auto-migrated): <a href="./split-view.html" style="color:inherit">desktop split</a> · <a href="./mobile.html" style="color:inherit">mobile</a></p>
+        <footer style="text-align:center;margin-top:3em;font-size:.8rem;opacity:.5">Stay reflective. Write better. — no accounts, localStorage only</footer>
     </div>
 
     <script src="./assets/js/shared.js"></script>
@@ -208,7 +216,7 @@
             });
         });
         document.getElementById('clear-btn').addEventListener('click', () => {
-            if (!confirm('Clear all 48 answers in this unified view? (Legacy copies stay untouched.)')) return;
+            if (!confirm('Clear all 48 answers on this page? This cannot be undone.')) return;
             state = {}; inputs.forEach(o => { o.ta.value = ''; autoResize(o.ta); });
             queueSave(); updateProgress();
         });
