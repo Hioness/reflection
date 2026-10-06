@@ -30,7 +30,7 @@
         .progress-bar i { display:block; height:100%; width:0%; background:var(--text-color); transition:width .3s ease; }
     </style>
 </head>
-<body>
+<body class="design-v2">
     <script>
         (function(){try{var s=localStorage.getItem('reflection-global-theme');var q=new URLSearchParams(location.search).get('theme');var d=q==='dark'?true:q==='light'?false:s?s==='dark':!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches);if(d)document.body.classList.add('dark-mode');}catch(e){document.body.classList.add('dark-mode');}})();
     </script>
