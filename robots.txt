@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-# Replace with your production domain, then update sitemap.xml to match.
-Sitemap: https://reflection.vercel.app/sitemap.xml
+Sitemap: https://reflection-phi.vercel.app/sitemap.xml

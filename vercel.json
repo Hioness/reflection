@@ -2,16 +2,15 @@
   "cleanUrls": true,
   "rewrites": [{ "source": "/", "destination": "/index.html" }],
   "redirects": [
-    { "source": "/split-view.html", "destination": "/annual.html", "permanent": true },
-    { "source": "/split-view", "destination": "/annual.html", "permanent": true },
-    { "source": "/mobile.html", "destination": "/annual.html", "permanent": true },
-    { "source": "/mobile", "destination": "/annual.html", "permanent": true }
+    { "source": "/split-view.html", "destination": "/annual", "permanent": true },
+    { "source": "/split-view", "destination": "/annual", "permanent": true },
+    { "source": "/mobile.html", "destination": "/annual", "permanent": true },
+    { "source": "/mobile", "destination": "/annual", "permanent": true }
   ],
   "headers": [
     {
       "source": "/assets/(.*)",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
     }
-  ],
-  "excludeFiles": ["temp/**"]
+  ]
 }
