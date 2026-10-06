@@ -2,6 +2,8 @@
 
 A minimalist, atmospheric web app for reflection and focused writing — now with multiple practices. Pick one from the landing page. No accounts, everything in `localStorage`.
 
+Live: <https://reflection-phi.vercel.app>
+
 Live pages:
 - `index.html` — landing / chooser (Annual · Telos · Blank)
 - `annual.html` — Annual Review, unified responsive (48 Q, progress, `reflection-annual-v1`, auto-migrates `reflection-mobile-responses`)
@@ -10,6 +12,16 @@ Live pages:
 - `split-view.html` / `mobile.html` — redirect stubs → `annual.html` (kept for old bookmarks + file://, plus Vercel 308s)
 
 ## What shipped
+
+**Oct 2026 — design pass (v2)**
+- New scoped design layer in `shared.css` under `body.design-v2` (landing, annual, telos, 404). `blank.html` is untouched, so it keeps the v1 look exactly.
+- Warm paper surface + single muted-bronze accent, soft radial background, ambient ASCII softened with a radial mask.
+- Landing: serif wordmark masthead + wave glyph, flanked eyebrow rule, larger display title, unified card heights with line-art icons, accent reveal on hover.
+- Forms: diamond-accented section headings, refined inputs with accent focus ring, pill progress/action bars, dashed template builder.
+
+**Oct 2026 — deploy fix**
+- Removed invalid top-level `excludeFiles` from `vercel.json`. Vercel's schema rejects unknown root keys, so production deploys had been failing since Oct 3; `temp/` is gitignored, so nothing needed excluding.
+- `robots.txt` + `sitemap.xml` now use the real production domain `https://reflection-phi.vercel.app` and clean URLs.
 
 **Oct 2026 — hub + hardening**
 - Shared `assets/css/shared.css` + `assets/js/shared.js`: theme, clipboard fallback, sanitize, auto-resize, debounced storage, download, ASCII animator, modern bold/italic/H1/H2 (no `execCommand` for formatting).
@@ -67,8 +79,9 @@ No build step. Force a theme with `?theme=light` or `?theme=dark`.
 
 ## Deployment
 
-1. Push to GitHub, connect the repo to Vercel, deploy.
-2. Set your production domain, then replace the placeholder (`https://reflection.vercel.app`) in `robots.txt` and `sitemap.xml` with it.
+Production: <https://reflection-phi.vercel.app> — the repo is connected to Vercel, so every push to `master` deploys.
+
+If the production domain ever changes, update `robots.txt` and `sitemap.xml` to match. Keep `vercel.json` schema-valid: Vercel rejects unknown top-level keys (a stray `excludeFiles` silently broke deploys once — see above).
 
 `temp/` holds gitignored scratch (including the original telos notes); the committed copy lives at `docs/telos-framework.md`.
 
