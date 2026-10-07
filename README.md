@@ -13,6 +13,10 @@ Live pages:
 
 ## What shipped
 
+**Oct 2026 — Libron typeface**
+- [Libron](https://github.com/nicoverbruggen/libron) v0.30 (OFL) is now the site's main font. Web kit self-hosted as 4 × WOFF2 in `assets/fonts/` and declared via `@font-face` in `shared.css`.
+- `--font-sans` (the default `html, body` face) and `--font-serif` both resolve to Libron, falling back to Georgia. Inter and Cormorant Garamond were dropped entirely; JetBrains Mono still loads from Google for the small mono/UI chrome (buttons, labels, progress).
+
 **Oct 2026 — design pass (v2)**
 - New scoped design layer in `shared.css` under `body.design-v2` (landing, annual, telos, 404). `blank.html` is untouched, so it keeps the v1 look exactly.
 - Warm paper surface + single muted-bronze accent, soft radial background, ambient ASCII softened with a radial mask.
@@ -54,6 +58,7 @@ reflection/
 ├── split-view.html     # Redirect → annual.html (legacy bookmark)
 ├── assets/
 │   ├── css/shared.css
+│   ├── fonts/*.woff2     # Libron web kit (self-hosted, OFL)
 │   ├── js/shared.js
 │   ├── icons/*.png      # generated from the SVGs below (rsvg-convert)
 │   └── *.svg            # vector sources (favicon, dark variant, icon art)
