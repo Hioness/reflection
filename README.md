@@ -22,6 +22,7 @@ Live pages:
 - Bottom bars (`#toolbar`, `.action-bar`) are translucent with `backdrop-filter` frosting, square corners, and a softer shadow.
 - Blank's formatting toolbar compacts on narrow screens (`Bold → B`, `Italic → I`; the font control keeps its full name, MONO/SERIF/SANS) and stays on a single row from 320px up.
 - Fresh light + dark captures of every page live in `docs/screenshots/`.
+- **Cache fix:** the previous deploy served `/assets/(.*)` with `max-age=31536000, immutable`, so returning browsers still held the pre-redesign `shared.css`/`shared.js` and rendered a hybrid page. Both are now requested with a `?v=` cache-buster and served `must-revalidate`.
 
 **Oct 2026 — review fix round**
 - Data safety: annual answers keyed by stable question slugs with a one-shot legacy import (positional `review-N` keys + `reflection-mobile-responses`, deleted after import); debounced saves flush on `pagehide`/`visibilitychange`; quota/security save failures raise an alert banner; cross-tab edits sync via the `storage` event.
@@ -110,6 +111,8 @@ No build step, no dependencies. Force a theme with `?theme=light` or `?theme=dar
 Production: <https://reflection-phi.vercel.app> — the repo is connected to Vercel, so every push to `master` deploys.
 
 If the production domain ever changes, update `robots.txt` and `sitemap.xml` to match. Keep `vercel.json` schema-valid: Vercel rejects unknown top-level keys (a stray `excludeFiles` silently broke deploys once — see above).
+
+If you change `assets/css/shared.css` or `assets/js/shared.js`, bump the `?v=` query on their `<link>`/`<script>` tags in the five pages. Those two files were once served `immutable` for a year, so browsers that visited before the “paper” redesign still hold the old copies — the version query is what forces a fresh fetch. (Everything else revalidates normally.)
 
 `temp/` holds gitignored scratch (including the original telos notes); the committed copy lives at `docs/telos-framework.md`.
 
