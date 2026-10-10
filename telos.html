@@ -14,23 +14,28 @@
     <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
     <link rel="manifest" href="./site.webmanifest">
     <meta name="theme-color" content="#333333">
+    <script>
+        /* Early theme: runs before any stylesheet so first paint uses the right bg (no white flash). */
+        (function(){var d=true;try{var s=localStorage.getItem('reflection-global-theme');var q=new URLSearchParams(location.search).get('theme');d=q==='dark'?true:q==='light'?false:s?s==='dark':!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches);}catch(e){}if(d){document.documentElement.classList.add('dark-mode');}try{var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',d?'#1a1a1a':'#F0EEE6');}catch(e2){}})();
+    </script>
+    <style>html{background-color:#F0EEE6}html.dark-mode{background-color:#1a1a1a}body{background-color:#F0EEE6}html.dark-mode body{background-color:#1a1a1a}</style>
     <meta name="color-scheme" content="dark light">
-    <meta property="og:image" content="./assets/icons/icon-512.png">
+    <meta property="og:image" content="https://reflection-phi.vercel.app/assets/icons/icon-512.png">
+    <meta property="og:url" content="https://reflection-phi.vercel.app/telos">
+    <link rel="canonical" href="https://reflection-phi.vercel.app/telos">
     <link rel="icon" href="./favicon.ico" sizes="any">
     <link rel="icon" type="image/png" sizes="192x192" href="./assets/icons/icon-192.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./assets/css/shared.css">
+    <link rel="stylesheet" href="./assets/css/telos.css">
 </head>
-<body class="design-v2">
-    <script>
-        (function(){try{var s=localStorage.getItem('reflection-global-theme');var q=new URLSearchParams(location.search).get('theme');var d=q==='dark'?true:q==='light'?false:s?s==='dark':!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches);if(d)document.body.classList.add('dark-mode');}catch(e){document.body.classList.add('dark-mode');}})();
-    </script>
+<body>
     <a class="skip-link" href="#main">Skip to content</a>
     <pre id="art" class="art-layer" aria-hidden="true"></pre>
 
-    <div class="content-container" id="main">
+    <main class="content-container" id="main">
         <div class="toggle-container">
             <a class="btn-ghost" href="./index.html">← All</a>
             <a class="btn-ghost" href="./annual.html">Annual</a>
@@ -45,9 +50,9 @@
 
         <section>
             <h2 class="section-title">Problems</h2>
-            <p class="section-hint">External problems or inefficiencies you want to solve. Not job titles — what’s broken in the world that you care about?</p>
+            <p class="section-hint" id="hint-problems">External problems or inefficiencies you want to solve. Not job titles — what’s broken in the world that you care about?</p>
             <div class="question-item">
-                <textarea id="f-problems" class="answer-input auto-resize" data-key="problems" aria-label="Problems you want to solve" placeholder="e.g. Junior devs drown in AI-generated code they can't evaluate…"></textarea>
+                <textarea id="f-problems" class="answer-input auto-resize" data-key="problems" aria-label="Problems you want to solve" aria-describedby="hint-problems" placeholder="e.g. Junior devs drown in AI-generated code they can't evaluate…"></textarea>
             </div>
         </section>
 
@@ -59,8 +64,8 @@
                 <textarea id="f-mission-x" class="answer-input auto-resize" data-key="missionX" placeholder="e.g. people outsource thinking to AI"></textarea>
                 <label for="f-mission-y">Y — what you're doing about it</label>
                 <textarea id="f-mission-y" class="answer-input auto-resize" data-key="missionY" placeholder="e.g. building small tools that force clear thinking"></textarea>
-                <output id="unifying-preview">I think one of the biggest problems is […], which is why I am focusing on […].</output>
-                <div style="margin-top:.8em;display:flex;gap:.6em;flex-wrap:wrap">
+                <output id="unifying-preview" aria-live="off">I think one of the biggest problems is […], which is why I am focusing on […].</output>
+                <div class="builder__actions">
                     <button class="tool-btn" id="use-sentence">Use as mission ↓</button>
                 </div>
             </div>
@@ -96,25 +101,25 @@
 
         <section>
             <h2 class="section-title">History &amp; Context</h2>
-            <p class="section-hint">Formative background, failures, trajectory — what explains how you got here?</p>
+            <p class="section-hint" id="hint-history">Formative background, failures, trajectory — what explains how you got here?</p>
             <div class="question-item">
-                <textarea id="f-history" class="answer-input auto-resize" data-key="history" aria-label="History and context" placeholder="Career shifts, key failures, foundations…"></textarea>
+                <textarea id="f-history" class="answer-input auto-resize" data-key="history" aria-label="History and context" aria-describedby="hint-history" placeholder="Career shifts, key failures, foundations…"></textarea>
             </div>
         </section>
 
         <section>
             <h2 class="section-title">Challenges &amp; Insecurities</h2>
-            <p class="section-hint">Brutally honest bottlenecks, skill gaps, confidence hurdles.</p>
+            <p class="section-hint" id="hint-challenges">Brutally honest bottlenecks, skill gaps, confidence hurdles.</p>
             <div class="question-item">
-                <textarea id="f-challenges" class="answer-input auto-resize" data-key="challenges" aria-label="Challenges and insecurities" placeholder="What slows you down? What are you avoiding?"></textarea>
+                <textarea id="f-challenges" class="answer-input auto-resize" data-key="challenges" aria-label="Challenges and insecurities" aria-describedby="hint-challenges" placeholder="What slows you down? What are you avoiding?"></textarea>
             </div>
         </section>
 
         <section>
             <h2 class="section-title">Strategies &amp; Projects</h2>
-            <p class="section-hint">Systems, routines, and active builds to overcome the above.</p>
+            <p class="section-hint" id="hint-strategies">Systems, routines, and active builds to overcome the above.</p>
             <div class="question-item">
-                <textarea id="f-strategies" class="answer-input auto-resize" data-key="strategies" aria-label="Strategies and projects" placeholder="Daily systems, projects in flight…"></textarea>
+                <textarea id="f-strategies" class="answer-input auto-resize" data-key="strategies" aria-label="Strategies and projects" aria-describedby="hint-strategies" placeholder="Daily systems, projects in flight…"></textarea>
             </div>
         </section>
 
@@ -126,7 +131,9 @@
                 <input id="log-date" type="date" class="answer-input" style="min-height:0">
                 <label for="log-text">Entry</label>
                 <textarea id="log-text" class="answer-input auto-resize" aria-label="New log entry" placeholder="Today I… friction was…"></textarea>
-                <div style="margin-top:.8em"><button class="tool-btn" id="add-log">+ Add entry</button></div>
+                <div class="builder__actions">
+                    <button class="tool-btn" id="add-log">+ Add entry</button>
+                </div>
             </div>
             <div id="logs-list"></div>
         </section>
@@ -135,8 +142,8 @@
             <h2 class="section-title">Red-team it</h2>
             <p class="section-hint">After 7–14 days of logs, feed your <code>telos.md</code> to an LLM or <code>fabric</code>. Start with this prompt:</p>
             <div class="builder">
-                <output id="redteam-prompt" style="font-family:var(--font-sans);font-size:.95rem">Review my stated missions and goals against my daily logs. Identify my top three blind spots, call out where I am confusing busywork with actual progress, and highlight where my execution contradicts my stated priorities.</output>
-                <div style="margin-top:.8em;display:flex;gap:.6em;flex-wrap:wrap">
+                <output id="redteam-prompt">Review my stated missions and goals against my daily logs. Identify my top three blind spots, call out where I am confusing busywork with actual progress, and highlight where my execution contradicts my stated priorities.</output>
+                <div class="builder__actions">
                     <button class="tool-btn" id="copy-prompt">Copy prompt</button>
                     <button class="tool-btn" id="copy-full">Copy telos.md + prompt</button>
                 </div>
@@ -148,8 +155,8 @@
             <button class="tool-btn" id="download-btn2">Download</button>
             <a class="btn-ghost" href="./index.html">← Home</a>
         </div>
-        <footer class="site-footer">Stay reflective. Write better. — no accounts, localStorage only</footer>
-    </div>
+    </main>
+    <footer class="site-footer">Stay reflective. Write better. — no accounts, localStorage only</footer>
 
     <script src="./assets/js/shared.js"></script>
     <script>
@@ -164,6 +171,9 @@
             goals: [{ done: false, text: '' }],
             logs: []
         });
+        // harden array shapes: bad entries must not throw during render/export
+        state.goals = (Array.isArray(state.goals) ? state.goals : []).filter(g => g && typeof g === 'object').map(g => ({ done: !!g.done, text: typeof g.text === 'string' ? g.text : '' }));
+        state.logs = (Array.isArray(state.logs) ? state.logs : []).filter(l => l && typeof l === 'object').map(l => ({ date: typeof l.date === 'string' ? l.date : '', text: typeof l.text === 'string' ? l.text : '' }));
 
         // hydrate simple fields
         document.querySelectorAll('[data-key]').forEach(el => {
@@ -191,27 +201,30 @@
             const ta = document.getElementById('f-missions');
             ta.value = s; autoResize(ta); queueSave();
             e.target.textContent = 'Used!';
+            ReflectionUI.announce('Used!');
             setTimeout(() => e.target.textContent = 'Use as mission ↓', 1500);
         });
 
         // goals
         const goalsEl = document.getElementById('goals-list');
+        const goalLabel = (i, text) => 'Mark goal ' + (i + 1) + ' done' + (text ? ': ' + text : '');
         function renderGoals() {
             goalsEl.innerHTML = '';
             state.goals.forEach((g, i) => {
                 const row = document.createElement('div');
                 row.className = 'goal-row question-item';
                 const cb = document.createElement('input');
-                cb.type = 'checkbox'; cb.checked = !!g.done; cb.setAttribute('aria-label', 'Goal done');
+                cb.type = 'checkbox'; cb.checked = !!g.done; cb.setAttribute('aria-label', goalLabel(i, g.text));
                 cb.addEventListener('change', () => { g.done = cb.checked; queueSave(); });
                 const ta = document.createElement('textarea');
                 ta.className = 'answer-input auto-resize';
                 ta.setAttribute('aria-label', 'Goal ' + (i + 1));
                 ta.placeholder = 'e.g. Ship telos.md draft by Oct 20';
                 ta.value = g.text || '';
-                ta.addEventListener('input', () => { g.text = ta.value; autoResize(ta); queueSave(); });
+                ta.addEventListener('input', () => { g.text = ta.value; cb.setAttribute('aria-label', goalLabel(i, ta.value)); autoResize(ta); queueSave(); });
                 const del = document.createElement('button');
                 del.className = 'tool-btn'; del.textContent = '✕'; del.title = 'Remove';
+                del.setAttribute('aria-label', 'Remove goal ' + (i + 1));
                 del.addEventListener('click', () => { state.goals.splice(i, 1); if (!state.goals.length) state.goals.push({ done: false, text: '' }); renderGoals(); queueSave(); });
                 row.appendChild(cb); row.appendChild(ta); row.appendChild(del);
                 goalsEl.appendChild(row);
@@ -227,7 +240,7 @@
         // logs
         const logsEl = document.getElementById('logs-list');
         const dateInput = document.getElementById('log-date');
-        dateInput.value = new Date().toISOString().slice(0, 10);
+        dateInput.value = ReflectionStore.localDate();
         function renderLogs() {
             logsEl.innerHTML = '';
             [...state.logs].reverse().forEach((entry, revIdx) => {
@@ -244,6 +257,7 @@
                 ta.addEventListener('input', () => { state.logs[idx].text = ta.value; autoResize(ta); queueSave(); });
                 const del = document.createElement('button');
                 del.className = 'tool-btn'; del.textContent = 'Delete';
+                del.setAttribute('aria-label', 'Delete log entry for ' + entry.date);
                 del.addEventListener('click', () => { state.logs.splice(idx, 1); renderLogs(); queueSave(); });
                 div.appendChild(label); div.appendChild(ta);
                 const wrap = document.createElement('div');
@@ -259,73 +273,87 @@
         renderLogs();
         document.getElementById('add-log').addEventListener('click', (e) => {
             const text = document.getElementById('log-text').value.trim();
-            const date = dateInput.value || new Date().toISOString().slice(0, 10);
+            const date = dateInput.value || ReflectionStore.localDate();
             if (!text) { document.getElementById('log-text').focus(); return; }
             state.logs.push({ date, text });
             document.getElementById('log-text').value = '';
             autoResize(document.getElementById('log-text'));
             renderLogs(); queueSave();
             e.target.textContent = 'Added!';
+            ReflectionUI.announce('Added!');
             setTimeout(() => e.target.textContent = '+ Add entry', 1500);
         });
 
         const save = ReflectionStore.debounce(() => ReflectionStore.saveJSON(KEY, state), 400);
         function queueSave() { save(); }
 
+        // flush pending saves before the page goes away
+        window.addEventListener('pagehide', () => save.flush());
+        document.addEventListener('visibilitychange', () => { if (document.hidden) save.flush(); });
+
+        // cross-tab: adopt remote values without clobbering a focused field
+        ReflectionStore.onExternalChange(KEY, (remote) => {
+            if (!remote || typeof remote !== 'object') return;
+            document.querySelectorAll('[data-key]').forEach(el => {
+                if (el === document.activeElement) return;
+                const k = el.getAttribute('data-key');
+                const v = typeof remote[k] === 'string' ? remote[k] : '';
+                if (el.value !== v) { el.value = v; autoResize(el); state[k] = v; }
+            });
+            if (Array.isArray(remote.goals) && !goalsEl.contains(document.activeElement)) {
+                state.goals = remote.goals.filter(g => g && typeof g === 'object').map(g => ({ done: !!g.done, text: typeof g.text === 'string' ? g.text : '' }));
+                renderGoals();
+            }
+            if (Array.isArray(remote.logs) && !logsEl.contains(document.activeElement)) {
+                state.logs = remote.logs.filter(l => l && typeof l === 'object').map(l => ({ date: typeof l.date === 'string' ? l.date : '', text: typeof l.text === 'string' ? l.text : '' }));
+                renderLogs();
+            }
+            renderPreview();
+        });
+
         // export
         function buildTelosMd() {
-            const goals = state.goals.filter(g => (g.text || '').trim())
-                .map(g => `- [${g.done ? 'x' : ' '}] ${g.text.trim()}`).join('\n') || '- [ ] ';
-            const logs = state.logs.map(l => `- **${l.date}:** ${l.text}`).join('\n') || '-';
+            const S = (v) => typeof v === 'string' ? v : '';
+            const goals = state.goals.filter(g => S(g.text).trim())
+                .map(g => `- [${g.done ? 'x' : ' '}] ${S(g.text).trim()}`).join('\n') || '- [ ] ';
+            const logs = state.logs.map(l => `- **${S(l.date)}:** ${S(l.text)}`).join('\n') || '-';
             return `# TELOS
 
 ## Problems
-${state.problems.trim() || '- [Core external problem you aim to solve]'}
+${S(state.problems).trim() || '- [Core external problem you aim to solve]'}
 
 ## Missions
-${state.missions.trim() || '- [Your unifying sentence]'}
+${S(state.missions).trim() || '- [Your unifying sentence]'}
 
 ## Narratives
-- **8-Second:** ${state.narrative8.trim() || '[Quick pitch]'}
-- **15-Second:** ${state.narrative15.trim() || '[Elevator pitch]'}
-- **30-Second:** ${state.narrative30.trim() || '[Conversation starter]'}
+- **8-Second:** ${S(state.narrative8).trim() || '[Quick pitch]'}
+- **15-Second:** ${S(state.narrative15).trim() || '[Elevator pitch]'}
+- **30-Second:** ${S(state.narrative30).trim() || '[Conversation starter]'}
 
 ## Goals
 ${goals}
 
 ## History & Context
-${state.history.trim() || '-'}
+${S(state.history).trim() || '-'}
 
 ## Challenges & Insecurities
-${state.challenges.trim() || '-'}
+${S(state.challenges).trim() || '-'}
 
 ## Strategies & Projects
-${state.strategies.trim() || '-'}
+${S(state.strategies).trim() || '-'}
 
 ## Logs
 ${logs}
 `;
         }
 
-        function bindCopy(id, getText, ok) {
-            const btn = document.getElementById(id);
-            if (btn) btn.addEventListener('click', () => copyToClipboard(getText(), btn, ok || 'Copied!'));
-        }
-        bindCopy('copy-btn', buildTelosMd);
-        bindCopy('copy-btn2', buildTelosMd);
-        bindCopy('copy-prompt', () => document.getElementById('redteam-prompt').textContent);
-        bindCopy('copy-full', () => buildTelosMd() + '\n---\n\n' + document.getElementById('redteam-prompt').textContent + '\n');
+        ReflectionUI.bindCopy('copy-btn', buildTelosMd);
+        ReflectionUI.bindCopy('copy-btn2', buildTelosMd);
+        ReflectionUI.bindCopy('copy-prompt', () => document.getElementById('redteam-prompt').textContent);
+        ReflectionUI.bindCopy('copy-full', () => buildTelosMd() + '\n---\n\n' + document.getElementById('redteam-prompt').textContent + '\n');
 
-        function doDownload(btnId) {
-            const btn = document.getElementById(btnId);
-            if (btn) btn.addEventListener('click', () => {
-                downloadFile('telos.md', buildTelosMd());
-                const o = btn.textContent; btn.textContent = 'Saved!';
-                setTimeout(() => btn.textContent = o, 1500);
-            });
-        }
-        doDownload('download-btn');
-        doDownload('download-btn2');
+        ReflectionUI.bindDownload('download-btn', buildTelosMd, 'telos.md');
+        ReflectionUI.bindDownload('download-btn2', buildTelosMd, 'telos.md');
     </script>
 </body>
 </html>

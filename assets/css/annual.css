@@ -1,0 +1,49 @@
+/* ============================================================================
+   Reflection — Annual Review page components
+   ----------------------------------------------------------------------------
+   Page-specific layer on top of shared.css. Only components unique to
+   annual.html live here: the progress strip and the memories grid.
+   ========================================================================== */
+
+/* ---------- progress strip ---------- */
+.progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 14px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-bottom: 2em;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--line);
+  overflow: hidden;
+  border-radius: 0;
+}
+
+.progress-bar i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--ink);
+  transition: width 0.3s ease;
+}
+
+/* ---------- memories (grid on wider screens) ---------- */
+.memories-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 2em;
+}
+
+@media (min-width: 640px) {
+  .memories-grid { grid-template-columns: repeat(2, 1fr); }
+}

@@ -9,34 +9,33 @@
     <meta property="og:description" content="Annual review, telos builder, and blank canvas. Minimal, local-first.">
     <meta name="twitter:card" content="summary">
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://reflection-phi.vercel.app/">
+    <link rel="canonical" href="https://reflection-phi.vercel.app/">
     <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" media="(prefers-color-scheme: light)">
     <link rel="icon" type="image/svg+xml" href="./assets/favicon-dark.svg" media="(prefers-color-scheme: dark)">
     <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
     <link rel="manifest" href="./site.webmanifest">
     <meta name="theme-color" content="#333333">
+    <script>
+        /* Early theme: runs before any stylesheet so first paint uses the right bg (no white flash). */
+        (function(){var d=true;try{var s=localStorage.getItem('reflection-global-theme');var q=new URLSearchParams(location.search).get('theme');d=q==='dark'?true:q==='light'?false:s?s==='dark':!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches);}catch(e){}if(d){document.documentElement.classList.add('dark-mode');}try{var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',d?'#1a1a1a':'#F0EEE6');}catch(e2){}})();
+    </script>
+    <style>html{background-color:#F0EEE6}html.dark-mode{background-color:#1a1a1a}body{background-color:#F0EEE6}html.dark-mode body{background-color:#1a1a1a}</style>
     <meta name="color-scheme" content="dark light">
-    <meta property="og:image" content="./assets/icons/icon-512.png">
+    <meta property="og:image" content="https://reflection-phi.vercel.app/assets/icons/icon-512.png">
     <link rel="icon" href="./favicon.ico" sizes="any">
     <link rel="icon" type="image/png" sizes="192x192" href="./assets/icons/icon-192.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./assets/css/shared.css">
-    <script>
-        (function(){try{var s=localStorage.getItem('reflection-global-theme');var q=new URLSearchParams(location.search).get('theme');var d=q==='dark'?true:q==='light'?false:s?s==='dark':!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches);if(d)document.documentElement.classList.add('dark-pre');}catch(e){}})();
-    </script>
-    <style>
-        html.dark-pre body { background:#1a1a1a; }
-    </style>
+    <link rel="stylesheet" href="./assets/css/index.css">
 </head>
-<body class="design-v2">
-    <script>
-        (function(){try{var s=localStorage.getItem('reflection-global-theme');var q=new URLSearchParams(location.search).get('theme');var d=q==='dark'?true:q==='light'?false:s?s==='dark':!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches);if(d)document.body.classList.add('dark-mode');}catch(e){document.body.classList.add('dark-mode');}})();
-    </script>
+<body>
     <a class="skip-link" href="#main">Skip to content</a>
     <pre id="art" class="art-layer" aria-hidden="true"></pre>
 
-    <div class="content-container wide" id="main">
+    <main class="content-container wide" id="main">
         <header class="masthead">
             <a class="wordmark" href="./index.html">
                 <svg viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
@@ -64,7 +63,7 @@
                         <path d="M9.6 9.7c0-1.4 1.1-2.5 2.4-2.5"/>
                     </svg>
                 </span>
-                <h3>Annual Review</h3>
+                <h2>Annual Review</h2>
                 <p>Modern Wisdom year-end questions + memories + plan. One responsive page with progress.</p>
                 <span class="go">Open →</span>
             </a>
@@ -75,7 +74,7 @@
                         <path d="M15.6 8.4l-2.1 5.1-5.1 2.1 2.1-5.1z"/>
                     </svg>
                 </span>
-                <h3>Telos Builder</h3>
+                <h2>Telos Builder</h2>
                 <p>Problems → mission → narratives → goals → logs. Draft a <code>telos.md</code> you can feed to an LLM for red-teaming.</p>
                 <span class="go">Open →</span>
             </a>
@@ -87,16 +86,16 @@
                         <path d="M9.5 13h5M9.5 17h3"/>
                     </svg>
                 </span>
-                <h3>Blank Page</h3>
+                <h2>Blank Page</h2>
                 <p>Just write. Serif / sans / mono, copy + download. For morning pages and everything else.</p>
                 <span class="go">Open →</span>
             </a>
         </div>
 
         <p class="legacy-links">Old split-view / mobile bookmarks forward to Annual.</p>
+    </main>
 
-        <footer class="site-footer">Stay reflective. Write better. — no accounts, localStorage only</footer>
-    </div>
+    <footer class="site-footer">Stay reflective. Write better. — no accounts, localStorage only</footer>
 
     <script src="./assets/js/shared.js"></script>
     <script>

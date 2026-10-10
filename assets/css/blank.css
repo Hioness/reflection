@@ -1,0 +1,124 @@
+/* ============================================================================
+   Reflection — blank page components  ("editorial paper" language)
+   Page-specific layer for blank.html: the borderless writing surface, the
+   sticky formatting toolbar and the word count. Shared tokens and components
+   (buttons, .title, .subtitle, .hero-kicker, .toggle-container, .answer-input,
+   footer, utilities) live in assets/css/shared.css and are not redefined here.
+   ========================================================================== */
+
+/* ---------- writing surface (borderless) ---------- */
+.writer-wrap {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.writer {
+  min-height: 44px;
+  outline: none;
+  font-size: 1.25rem;
+  line-height: 1.65;
+  border: 0;
+  background: transparent;
+}
+.writer:focus-visible { outline: none; }
+
+.writer:empty::before {
+  content: attr(placeholder);
+  display: block;
+  color: var(--muted);
+  opacity: 0.9;
+  font-family: var(--font-mono);
+}
+
+.writer h1 {
+  font-family: var(--font-serif);
+  font-size: 1.7em;
+  line-height: 1.2;
+  margin: 0.5em 0 0.35em;
+}
+.writer h2 {
+  font-family: var(--font-serif);
+  font-size: 1.35em;
+  line-height: 1.25;
+  margin: 0.6em 0 0.3em;
+}
+
+/* ---------- font choices (toggled on #editor by JS) ---------- */
+.font-serif {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  line-height: 1.6;
+}
+.font-sans {
+  font-family: var(--font-sans);
+  font-size: 1.08rem;
+  line-height: 1.7;
+}
+.font-mono {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+/* ---------- sticky formatting toolbar ---------- */
+#toolbar {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 16px 34px;
+  margin: 2em auto 0;
+  max-width: 860px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 0;
+  box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+  backdrop-filter: blur(12px) saturate(1.3);
+  position: sticky;
+  bottom: 12px;
+  z-index: 20;
+}
+#toolbar .sep {
+  width: 1px;
+  height: 16px;
+  background: var(--line);
+  opacity: 0.6;
+}
+
+/* ---------- word count ---------- */
+#count {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin: 26px 0 40px;
+}
+
+/* ---------- compact toolbar on narrow screens ----------
+   Short labels keep the bar to a single tidy row on phones: Bold → B,
+   Italic → I. The font control keeps its full name (MONO/SERIF/SANS). */
+.lbl-short { display: none; }
+
+@media (max-width: 740px) {
+  #toolbar {
+    gap: 7px;
+    padding: 12px 12px;
+  }
+  #toolbar .tool-btn {
+    padding: 8px 10px;
+    font-size: 10.5px;
+    letter-spacing: 1.3px;
+  }
+  #toolbar .sep { height: 14px; }
+  #toolbar .lbl-full { display: none; }
+  #toolbar .lbl-short { display: inline; }
+}
+
+@media (max-width: 360px) {
+  #toolbar { gap: 6px; padding: 10px 10px; }
+  #toolbar .sep { display: none; }
+  #toolbar .tool-btn { padding: 8px 9px; letter-spacing: 1.1px; }
+}

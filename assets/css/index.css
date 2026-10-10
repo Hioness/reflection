@@ -1,0 +1,120 @@
+/* ============================================================================
+   Reflection — home page components  ("editorial paper" language)
+   Page-specific layer for index.html. Shared tokens and components
+   (buttons, .title, .subtitle, .hero-kicker, footer, utilities) live in
+   assets/css/shared.css and are intentionally not redefined here.
+   ========================================================================== */
+
+/* ---------- masthead ---------- */
+.masthead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 64px;
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--ink);
+  text-decoration: none;
+}
+.wordmark svg {
+  width: 30px;
+  height: auto;
+  flex: none;
+}
+
+.masthead-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+/* ---------- card grid ---------- */
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+@media (min-width: 520px) {
+  .card-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 720px) {
+  .card-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+  padding: 1.6em 1.4em;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s ease;
+}
+.card:hover,
+.card:focus-visible {
+  border-color: var(--ink);
+  outline: none;
+}
+
+.card h2 {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 1.45rem;
+  margin: 0;
+}
+
+.card p {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 0;
+}
+
+.card .go {
+  margin-top: auto;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.card:hover p,
+.card:focus-visible p,
+.card:hover .go,
+.card:focus-visible .go {
+  color: var(--ink);
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+}
+.card-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* ---------- legacy note ---------- */
+.legacy-links {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 3em;
+}

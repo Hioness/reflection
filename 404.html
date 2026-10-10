@@ -3,36 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1a1a1a">
+    <script>
+        /* Early theme: runs before any stylesheet so first paint uses the right bg (no white flash). */
+        (function(){var d=true;try{var s=localStorage.getItem('reflection-global-theme');var q=new URLSearchParams(location.search).get('theme');d=q==='dark'?true:q==='light'?false:s?s==='dark':!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches);}catch(e){}if(d){document.documentElement.classList.add('dark-mode');}try{var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',d?'#1a1a1a':'#F0EEE6');}catch(e2){}})();
+    </script>
+    <style>html{background-color:#F0EEE6}html.dark-mode{background-color:#1a1a1a}body{background-color:#F0EEE6}html.dark-mode body{background-color:#1a1a1a}</style>
     <title>Lost — Reflection</title>
     <meta name="description" content="That page doesn't exist. Head back to choose your practice.">
     <meta name="color-scheme" content="dark light">
-    <link rel="icon" href="./favicon.ico" sizes="any">
-    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" media="(prefers-color-scheme: light)">
-    <link rel="icon" type="image/svg+xml" href="./assets/favicon-dark.svg" media="(prefers-color-scheme: dark)">
-    <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
+    <meta name="robots" content="noindex">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon-dark.svg" media="(prefers-color-scheme: dark)">
+    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./assets/css/shared.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/shared.css">
 </head>
-<body class="design-v2">
-    <script>
-        (function(){try{var s=localStorage.getItem('reflection-global-theme');var q=new URLSearchParams(location.search).get('theme');var d=q==='dark'?true:q==='light'?false:s?s==='dark':!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches);if(d)document.body.classList.add('dark-mode');}catch(e){document.body.classList.add('dark-mode');}})();
-    </script>
+<body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <div class="content-container" id="main" style="text-align:center">
-        <div class="hero-kicker" style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:.6;margin-top:1em">Reflection · Review &amp; Write</div>
+    <main class="content-container" id="main">
+        <div class="hero-kicker">Reflection · Review &amp; Write</div>
         <h1 class="title">That page wandered off</h1>
         <p class="subtitle">Nothing here but quiet. Pick a room:</p>
         <div class="toggle-container">
-            <a class="btn-ghost" href="./index.html">← All practices</a>
-            <a class="btn-ghost" href="./annual.html">Annual</a>
-            <a class="btn-ghost" href="./telos.html">Telos</a>
-            <a class="btn-ghost" href="./blank.html">Blank</a>
+            <a class="btn-ghost" href="/">← All practices</a>
+            <a class="btn-ghost" href="/annual">Annual</a>
+            <a class="btn-ghost" href="/telos">Telos</a>
+            <a class="btn-ghost" href="/blank">Blank</a>
         </div>
-        <footer class="site-footer">Stay reflective. Write better.</footer>
-    </div>
-    <script src="./assets/js/shared.js"></script>
+    </main>
+
+    <footer class="site-footer">Stay reflective. Write better.</footer>
+    <script src="/assets/js/shared.js"></script>
     <script>ReflectionTheme.loadTheme();</script>
 </body>
 </html>

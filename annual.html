@@ -14,30 +14,28 @@
     <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
     <link rel="manifest" href="./site.webmanifest">
     <meta name="theme-color" content="#333333">
+    <script>
+        /* Early theme: runs before any stylesheet so first paint uses the right bg (no white flash). */
+        (function(){var d=true;try{var s=localStorage.getItem('reflection-global-theme');var q=new URLSearchParams(location.search).get('theme');d=q==='dark'?true:q==='light'?false:s?s==='dark':!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches);}catch(e){}if(d){document.documentElement.classList.add('dark-mode');}try{var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',d?'#1a1a1a':'#F0EEE6');}catch(e2){}})();
+    </script>
+    <style>html{background-color:#F0EEE6}html.dark-mode{background-color:#1a1a1a}body{background-color:#F0EEE6}html.dark-mode body{background-color:#1a1a1a}</style>
     <meta name="color-scheme" content="dark light">
-    <meta property="og:image" content="./assets/icons/icon-512.png">
+    <meta property="og:image" content="https://reflection-phi.vercel.app/assets/icons/icon-512.png">
+    <meta property="og:url" content="https://reflection-phi.vercel.app/annual">
+    <link rel="canonical" href="https://reflection-phi.vercel.app/annual">
     <link rel="icon" href="./favicon.ico" sizes="any">
     <link rel="icon" type="image/png" sizes="192x192" href="./assets/icons/icon-192.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./assets/css/shared.css">
-    <style>
-        .memories-grid { display:grid; grid-template-columns:1fr; gap:0 2em; }
-        @media (min-width:640px){ .memories-grid{ grid-template-columns:1fr 1fr; } }
-        .progress-wrap { position:sticky; top:10px; z-index:30; background:var(--toolbar-bg); border:1px solid var(--card-border); border-radius:999px; padding:8px 16px; display:flex; align-items:center; gap:12px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1px; box-shadow:0 4px 18px rgba(0,0,0,.08); }
-        .progress-bar { flex:1; height:6px; border-radius:99px; background:var(--input-border); overflow:hidden; }
-        .progress-bar i { display:block; height:100%; width:0%; background:var(--text-color); transition:width .3s ease; }
-    </style>
+    <link rel="stylesheet" href="./assets/css/annual.css">
 </head>
-<body class="design-v2">
-    <script>
-        (function(){try{var s=localStorage.getItem('reflection-global-theme');var q=new URLSearchParams(location.search).get('theme');var d=q==='dark'?true:q==='light'?false:s?s==='dark':!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches);if(d)document.body.classList.add('dark-mode');}catch(e){document.body.classList.add('dark-mode');}})();
-    </script>
+<body>
     <a class="skip-link" href="#main">Skip to content</a>
     <pre id="art" class="art-layer" aria-hidden="true"></pre>
 
-    <div class="content-container" id="main">
+    <main class="content-container" id="main">
         <div class="toggle-container">
             <a class="btn-ghost" href="./index.html">← All</a>
             <a class="btn-ghost" href="./telos.html">Telos</a>
@@ -48,8 +46,8 @@
         <h1 class="title">Modern Wisdom<br>Annual Review</h1>
         <p class="subtitle">A structured reflection and planning workbook. <span id="count-label"></span></p>
 
-        <div class="progress-wrap" role="status" aria-live="polite">
-            <span id="progress-text">0 / 48</span>
+        <div class="progress-wrap">
+            <span id="progress-text"></span>
             <div class="progress-bar"><i id="progress-fill"></i></div>
             <button class="tool-btn" id="copy-btn">Copy</button>
             <button class="tool-btn" id="download-btn">Save</button>
@@ -63,8 +61,8 @@
             <button class="tool-btn" id="clear-btn">Clear</button>
             <a class="btn-ghost" href="./index.html">← Home</a>
         </div>
-        <footer style="text-align:center;margin-top:3em;font-size:.8rem;opacity:.5">Stay reflective. Write better. — no accounts, localStorage only</footer>
-    </div>
+    </main>
+    <footer class="site-footer">Stay reflective. Write better. — no accounts, localStorage only</footer>
 
     <script src="./assets/js/shared.js"></script>
     <script>
@@ -73,66 +71,100 @@
 
         const SECTIONS = [
             { id: 'review', title: 'Review', hint: 'How did this year actually go?', questions: [
-                'How has this year gone?',
-                'What went well?',
-                'What went badly?',
-                'Why?',
-                'What lessons did I learn?',
-                'What habit or system accounted for most of my success?',
-                'What are the most valuable ways I spend my time?',
-                'How can I find more time for this?',
-                'What brought me the most happiness?',
-                'How can I help these activities to happen more often?',
-                'Who are the people that had the greatest impact on me?',
-                'How can I see and collaborate with them more?',
-                "What did I expect to complete, but didn't?",
-                'Is this still an important goal of mine? If so, how can I make future follow-through more likely?',
-                'What are the least valuable ways I am spending my time?',
-                'How can I prevent myself from continuing to spend time in this way?',
-                'How have my goals or priorities shifted over the last few months?',
-                'Is there anything I am still doing that is no longer in alignment? Why?'
+                { id: 'how-has-this-year-gone', text: 'How has this year gone?' },
+                { id: 'what-went-well', text: 'What went well?' },
+                { id: 'what-went-badly', text: 'What went badly?' },
+                { id: 'why', text: 'Why?' },
+                { id: 'what-lessons-did-i-learn', text: 'What lessons did I learn?' },
+                { id: 'what-habit-or-system-accounted-for-most-of-my-success', text: 'What habit or system accounted for most of my success?' },
+                { id: 'most-valuable-ways-i-spend-my-time', text: 'What are the most valuable ways I spend my time?' },
+                { id: 'how-can-i-find-more-time-for-this', text: 'How can I find more time for this?' },
+                { id: 'what-brought-me-the-most-happiness', text: 'What brought me the most happiness?' },
+                { id: 'how-can-i-help-these-activities-happen-more-often', text: 'How can I help these activities to happen more often?' },
+                { id: 'people-with-greatest-impact-on-me', text: 'Who are the people that had the greatest impact on me?' },
+                { id: 'how-can-i-see-and-collaborate-with-them-more', text: 'How can I see and collaborate with them more?' },
+                { id: 'what-did-i-expect-to-complete', text: "What did I expect to complete, but didn't?" },
+                { id: 'is-this-still-an-important-goal', text: 'Is this still an important goal of mine? If so, how can I make future follow-through more likely?' },
+                { id: 'least-valuable-ways-i-spend-my-time', text: 'What are the least valuable ways I am spending my time?' },
+                { id: 'how-can-i-prevent-this-time-spend', text: 'How can I prevent myself from continuing to spend time in this way?' },
+                { id: 'how-have-my-goals-or-priorities-shifted', text: 'How have my goals or priorities shifted over the last few months?' },
+                { id: 'anything-still-in-alignment', text: 'Is there anything I am still doing that is no longer in alignment? Why?' }
             ]},
             { id: 'memories', title: 'Memories', hint: 'Small moments, grid view on desktop.', grid: true, questions: [
-                'Best Surprise','Best Meal','Coolest New Experience','Favourite Weekend',
-                'Favourite First Meeting','Favourite New City','Favourite New Emotion','Favourite New Walk',
-                'Favourite New Friend','Favourite Tour','Favourite Day','Most Intense Week',
-                'Best Sex','Favourite Artist','Favourite Song','Favourite Quote'
+                { id: 'best-surprise', text: 'Best Surprise' },
+                { id: 'best-meal', text: 'Best Meal' },
+                { id: 'coolest-new-experience', text: 'Coolest New Experience' },
+                { id: 'favourite-weekend', text: 'Favourite Weekend' },
+                { id: 'favourite-first-meeting', text: 'Favourite First Meeting' },
+                { id: 'favourite-new-city', text: 'Favourite New City' },
+                { id: 'favourite-new-emotion', text: 'Favourite New Emotion' },
+                { id: 'favourite-new-walk', text: 'Favourite New Walk' },
+                { id: 'favourite-new-friend', text: 'Favourite New Friend' },
+                { id: 'favourite-tour', text: 'Favourite Tour' },
+                { id: 'favourite-day', text: 'Favourite Day' },
+                { id: 'most-intense-week', text: 'Most Intense Week' },
+                { id: 'best-sex', text: 'Best Sex' },
+                { id: 'favourite-artist', text: 'Favourite Artist' },
+                { id: 'favourite-song', text: 'Favourite Song' },
+                { id: 'favourite-quote', text: 'Favourite Quote' }
             ]},
             { id: 'plan', title: 'Plan', hint: 'Design next year on purpose.', questions: [
-                'What would I do this year if I wanted to make 85 year old me miserable?',
-                'What would 85 year old me wish I did more of?',
-                'What are the things I do to make my day go great?',
-                'What things make my days go terribly?',
-                "What do I think is productive that isn't?",
-                "What is productive that I don't realise?",
-                'What do I want to do less of with my time?',
-                'What do I want to do more of with my time?',
-                'What does an ideal normal day look like? Write it out.',
-                'What conversations do I need to have?',
-                "What are the habits I'm committing to starting and stopping?"
+                { id: 'make-85-year-old-me-miserable', text: 'What would I do this year if I wanted to make 85 year old me miserable?' },
+                { id: 'what-would-85-year-old-me-wish', text: 'What would 85 year old me wish I did more of?' },
+                { id: 'things-that-make-my-day-great', text: 'What are the things I do to make my day go great?' },
+                { id: 'things-that-make-my-day-terrible', text: 'What things make my days go terribly?' },
+                { id: 'productive-that-isnt', text: "What do I think is productive that isn't?" },
+                { id: 'productive-i-dont-realise', text: "What is productive that I don't realise?" },
+                { id: 'do-less-with-my-time', text: 'What do I want to do less of with my time?' },
+                { id: 'do-more-with-my-time', text: 'What do I want to do more of with my time?' },
+                { id: 'ideal-normal-day', text: 'What does an ideal normal day look like? Write it out.' },
+                { id: 'conversations-i-need-to-have', text: 'What conversations do I need to have?' },
+                { id: 'habits-committing-starting-stopping', text: "What are the habits I'm committing to starting and stopping?" }
             ]},
             { id: 'final', title: 'Final Thoughts', hint: 'Close the loop.', questions: [
-                'What would have had to have happened by the end of next year for me to look back on the year and consider it a success?',
-                "Who do I need to become for next year's chapter of my life story to turn out the way I would write it?",
-                'Knowing what I know now, what advice would I give to myself 12 months ago?'
+                { id: 'year-considered-a-success', text: 'What would have had to have happened by the end of next year for me to look back on the year and consider it a success?' },
+                { id: 'who-do-i-need-to-become', text: "Who do I need to become for next year's chapter of my life story to turn out the way I would write it?" },
+                { id: 'advice-to-myself-12-months-ago', text: 'Knowing what I know now, what advice would I give to myself 12 months ago?' }
             ]}
         ];
 
         const NEW_KEY = 'reflection-annual-v1';
         const OLD_KEY = 'reflection-mobile-responses';
 
-        // migrate once: old mobile responses -> new unified key
-        function migrateIfEmpty(current) {
-            const hasAny = Object.values(current).some(v => (v || '').trim());
-            if (hasAny) return current;
+        // migration (once, deterministic): legacy mobile responses + positional keys -> stable ids
+        function migrateState(raw) {
+            const obj = (raw && typeof raw === 'object' && !Array.isArray(raw)) ? Object.assign({}, raw) : {};
+            // one-shot legacy merge: only fill keys the new object does not already have
             try {
-                const old = JSON.parse(localStorage.getItem(OLD_KEY) || 'null');
-                if (old && typeof old === 'object') return old;
+                const legacy = JSON.parse(localStorage.getItem(OLD_KEY) || 'null');
+                if (legacy && typeof legacy === 'object' && !Array.isArray(legacy)) {
+                    Object.keys(legacy).forEach(k => {
+                        if (!Object.prototype.hasOwnProperty.call(obj, k)) obj[k] = legacy[k];
+                    });
+                }
             } catch (e) {}
-            return current;
+            // always remove the legacy key: cleared answers must not resurrect
+            localStorage.removeItem(OLD_KEY);
+            // map positional keys to the questions' stable ids
+            SECTIONS.forEach(sec => {
+                sec.questions.forEach((q, i) => {
+                    const oldKey = sec.id + '-' + (i + 1);
+                    if (Object.prototype.hasOwnProperty.call(obj, oldKey)) {
+                        if (!Object.prototype.hasOwnProperty.call(obj, q.id)) {
+                            obj[q.id] = String(obj[oldKey]);
+                        }
+                        delete obj[oldKey];
+                    }
+                });
+            });
+            // drop any leftover positional keys
+            Object.keys(obj).forEach(k => {
+                if (/^(review|memories|plan|final)-\d+$/.test(k)) delete obj[k];
+            });
+            return obj;
         }
 
-        let state = migrateIfEmpty(ReflectionStore.loadJSON(NEW_KEY, {}));
+        let state = migrateState(ReflectionStore.loadJSON(NEW_KEY, {}));
         const root = document.getElementById('annual-root');
         const inputs = [];
 
@@ -149,19 +181,19 @@
             const group = document.createElement('div');
             if (sec.grid) group.className = 'memories-grid';
             sec.questions.forEach((q, i) => {
-                const key = sec.id + '-' + (i + 1);
+                const key = q.id;
                 const item = document.createElement('div');
                 item.className = 'question-item';
                 const label = document.createElement('label');
                 label.className = 'question-text';
-                label.textContent = q;
+                label.textContent = q.text;
                 const n = SECTIONS.slice(0, SECTIONS.indexOf(sec)).reduce((a,s)=>a+s.questions.length,0) + i + 1;
                 label.setAttribute('for', 'q-' + n);
                 const ta = document.createElement('textarea');
                 ta.className = 'answer-input auto-resize';
                 ta.id = 'q-' + n;
                 ta.placeholder = 'Type your answer here…';
-                ta.value = state[key] || '';
+                ta.value = typeof state[key] === 'string' ? state[key] : '';
                 ta.addEventListener('input', () => {
                     state[key] = ta.value;
                     autoResize(ta);
@@ -180,43 +212,66 @@
         function queueSave(){ persist(); }
 
         const TOTAL = inputs.length;
+        let remoteQuiet = false;
+        let lastAnnounced = 0;
         function updateProgress() {
             const done = inputs.filter(o => (o.ta.value || '').trim()).length;
             document.getElementById('progress-text').textContent = done + ' / ' + TOTAL;
             document.getElementById('progress-fill').style.width = (TOTAL ? (done / TOTAL * 100) : 0) + '%';
             document.getElementById('count-label').textContent = done === TOTAL ? 'Complete.' : done + ' of ' + TOTAL + ' answered.';
+            if (!remoteQuiet) {
+                const bucket = TOTAL ? Math.floor(done / TOTAL * 10) : 0;
+                if (bucket !== lastAnnounced) {
+                    lastAnnounced = bucket;
+                    ReflectionUI.announce(done === TOTAL ? 'All ' + TOTAL + ' answered.' : done + ' of ' + TOTAL + ' answered.');
+                }
+            }
         }
         updateProgress();
         // save migrated data so refresh keeps it under new key
         ReflectionStore.saveJSON(NEW_KEY, state);
 
+        // cross-tab: adopt remote answers without clobbering the focused field
+        ReflectionStore.onExternalChange(NEW_KEY, (remote) => {
+            if (!remote || typeof remote !== 'object') return;
+            inputs.forEach(({ key, ta }) => {
+                if (ta === document.activeElement) return;
+                const rawVal = remote[key];
+                const v = rawVal == null ? '' : String(rawVal);
+                if (v !== ta.value) {
+                    ta.value = v;
+                    autoResize(ta);
+                    state[key] = v;
+                }
+            });
+            remoteQuiet = true;
+            updateProgress();
+            remoteQuiet = false;
+        });
+
+        // flush pending saves before the page goes away
+        window.addEventListener('pagehide', () => persist.flush());
+        document.addEventListener('visibilitychange', () => { if (document.hidden) persist.flush(); });
+
         function buildMd() {
-            let out = '# Modern Wisdom Annual Review — ' + new Date().toISOString().slice(0,10) + '\n\n';
+            let out = '# Modern Wisdom Annual Review — ' + ReflectionStore.localDate() + '\n\n';
             SECTIONS.forEach(sec => {
                 out += '## ' + sec.title + '\n\n';
-                sec.questions.forEach((q, i) => {
-                    const key = sec.id + '-' + (i + 1);
-                    const v = (state[key] || '').trim();
-                    out += '### ' + q + '\n\n' + (v || '_—_') + '\n\n';
+                sec.questions.forEach(q => {
+                    const v = String(state[q.id] == null ? '' : state[q.id]).trim();
+                    out += '### ' + q.text + '\n\n' + (v || '_—_') + '\n\n';
                 });
             });
             return out;
         }
 
-        [['copy-btn', 'Copied!'], ['copy-btn2', 'Copied!']].forEach(([id, ok]) => {
-            const b = document.getElementById(id);
-            if (b) b.addEventListener('click', () => copyToClipboard(buildMd(), b, ok));
-        });
-        [['download-btn'], ['download-btn2']].forEach(([id]) => {
-            const b = document.getElementById(id);
-            if (b) b.addEventListener('click', () => {
-                downloadFile('annual-review-' + new Date().toISOString().slice(0,10) + '.md', buildMd());
-                const o = b.textContent; b.textContent = 'Saved!';
-                setTimeout(() => b.textContent = o, 1500);
-            });
-        });
+        ReflectionUI.bindCopy('copy-btn', buildMd, 'Copied!');
+        ReflectionUI.bindCopy('copy-btn2', buildMd, 'Copied!');
+        ReflectionUI.bindDownload('download-btn', buildMd, () => 'annual-review-' + ReflectionStore.localDate() + '.md', 'Saved!');
+        ReflectionUI.bindDownload('download-btn2', buildMd, () => 'annual-review-' + ReflectionStore.localDate() + '.md', 'Saved!');
+
         document.getElementById('clear-btn').addEventListener('click', () => {
-            if (!confirm('Clear all 48 answers on this page? This cannot be undone.')) return;
+            if (!confirm('Clear all ' + TOTAL + ' answers on this page? This cannot be undone.')) return;
             state = {}; inputs.forEach(o => { o.ta.value = ''; autoResize(o.ta); });
             queueSave(); updateProgress();
         });

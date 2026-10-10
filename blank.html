@@ -9,34 +9,33 @@
     <meta property="og:description" content="A distraction-free blank page. Three fonts, copy and download, saved locally.">
     <meta name="twitter:card" content="summary">
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://reflection-phi.vercel.app/blank">
+    <link rel="canonical" href="https://reflection-phi.vercel.app/blank">
     <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" media="(prefers-color-scheme: light)">
     <link rel="icon" type="image/svg+xml" href="./assets/favicon-dark.svg" media="(prefers-color-scheme: dark)">
     <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
     <link rel="manifest" href="./site.webmanifest">
     <meta name="theme-color" content="#333333">
+    <script>
+        /* Early theme: runs before any stylesheet so first paint uses the right bg (no white flash). */
+        (function(){var d=true;try{var s=localStorage.getItem('reflection-global-theme');var q=new URLSearchParams(location.search).get('theme');d=q==='dark'?true:q==='light'?false:s?s==='dark':!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches);}catch(e){}if(d){document.documentElement.classList.add('dark-mode');}try{var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',d?'#1a1a1a':'#F0EEE6');}catch(e2){}})();
+    </script>
+    <style>html{background-color:#F0EEE6}html.dark-mode{background-color:#1a1a1a}body{background-color:#F0EEE6}html.dark-mode body{background-color:#1a1a1a}</style>
     <meta name="color-scheme" content="dark light">
-    <meta property="og:image" content="./assets/icons/icon-512.png">
+    <meta property="og:image" content="https://reflection-phi.vercel.app/assets/icons/icon-512.png">
     <link rel="icon" href="./favicon.ico" sizes="any">
     <link rel="icon" type="image/png" sizes="192x192" href="./assets/icons/icon-192.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./assets/css/shared.css">
-    <style>
-        .writer-wrap { max-width: 640px; margin: 2em auto 0; }
-        #toolbar { display:flex; gap:14px; justify-content:center; align-items:center; padding:10px 20px; background:var(--toolbar-bg); border:1px solid var(--card-border); border-radius:999px; box-shadow:0 4px 20px rgba(0,0,0,.08); margin-top:2em; flex-wrap:wrap; position:sticky; bottom:12px; z-index:20; }
-        #toolbar .sep { width:1px; height:12px; background:var(--art-color); opacity:.5; }
-        #count { text-align:center; font-family:'JetBrains Mono',monospace; font-size:11px; opacity:.5; margin-top:1em; }
-    </style>
+    <link rel="stylesheet" href="./assets/css/blank.css">
 </head>
 <body>
-    <script>
-        (function(){try{var s=localStorage.getItem('reflection-global-theme');var q=new URLSearchParams(location.search).get('theme');var d=q==='dark'?true:q==='light'?false:s?s==='dark':!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches);if(d)document.body.classList.add('dark-mode');}catch(e){document.body.classList.add('dark-mode');}})();
-    </script>
     <a class="skip-link" href="#main">Skip to content</a>
     <pre id="art" class="art-layer" aria-hidden="true"></pre>
 
-    <div class="content-container" id="main">
+    <main class="content-container" id="main">
         <div class="toggle-container">
             <a class="btn-ghost" href="./index.html">← All</a>
             <a class="btn-ghost" href="./annual.html">Annual</a>
@@ -50,11 +49,11 @@
         <p class="subtitle">No prompts. Just write.</p>
 
         <div class="writer-wrap">
-            <div id="editor" class="writer font-mono" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Blank writing page" placeholder="Start writing…"></div>
+            <div id="editor" class="writer font-mono" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Blank writing page" aria-placeholder="Start writing…" placeholder="Start writing…"></div>
             <div id="count">0 words</div>
             <div id="toolbar">
-                <button class="tool-btn" data-fmt="bold">Bold</button>
-                <button class="tool-btn" data-fmt="italic">Italic</button>
+                <button class="tool-btn" data-fmt="bold" aria-label="Bold"><span class="lbl-full">Bold</span><span class="lbl-short" aria-hidden="true">B</span></button>
+                <button class="tool-btn" data-fmt="italic" aria-label="Italic"><span class="lbl-full">Italic</span><span class="lbl-short" aria-hidden="true">I</span></button>
                 <span class="sep"></span>
                 <button class="tool-btn" data-fmt="h1">H1</button>
                 <button class="tool-btn" data-fmt="h2">H2</button>
@@ -64,13 +63,14 @@
                 <button class="tool-btn" id="clear-btn">Clear</button>
             </div>
         </div>
-        <footer class="site-footer">Stay reflective. Write better. — no accounts, localStorage only</footer>
-    </div>
+    </main>
+
+    <footer class="site-footer">Stay reflective. Write better. — no accounts, localStorage only</footer>
 
     <script src="./assets/js/shared.js"></script>
     <script>
         ReflectionTheme.loadTheme();
-        var anim = createAsciiAnimator(document.getElementById('art'), { width: 40, height: 20 });
+        createAsciiAnimator(document.getElementById('art'), { width: 40, height: 20 });
 
         const KEY = 'reflection-blank-v1';
         const FONT_KEY = 'reflection-blank-font';
@@ -92,13 +92,33 @@
         updateCount();
 
         const persist = ReflectionStore.debounce(() => {
-            try { localStorage.setItem(KEY, editor.innerHTML); } catch (e) {}
+            try { localStorage.setItem(KEY, sanitizeHTML(editor.innerHTML)); } catch (e) { ReflectionStore.notifySaveError(); }
         }, 400);
         editor.addEventListener('input', () => { persist(); updateCount(); });
 
+        editor.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const text = (e.clipboardData || window.clipboardData).getData('text/plain') || '';
+            // insert at caret, preserving line breaks as <br>:
+            const sel = window.getSelection();
+            if (!sel.rangeCount) return;
+            sel.deleteFromDocument();
+            const range = sel.getRangeAt(0);
+            const frag = document.createDocumentFragment();
+            text.split(/\r\n|\r|\n/).forEach((line, i) => {
+                if (i) frag.appendChild(document.createElement('br'));
+                frag.appendChild(document.createTextNode(line));
+            });
+            const last = frag.lastChild;
+            range.insertNode(frag);
+            if (last) { range.setStartAfter(last); range.collapse(true); sel.removeAllRanges(); sel.addRange(range); }
+            editor.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+
+        window.addEventListener('pagehide', () => persist.flush());
+        document.addEventListener('visibilitychange', () => { if (document.hidden) persist.flush(); });
+
         function syncFontBtns() {
-            var b1 = document.getElementById('font-btn');
-            if (b1) b1.textContent = names[fontIdx];
             document.getElementById('font-btn2').textContent = names[fontIdx];
         }
         function cycleFont() {
@@ -109,8 +129,6 @@
             try { localStorage.setItem(FONT_KEY, String(fontIdx)); } catch (e) {}
             editor.focus();
         }
-        var topFontBtn = document.getElementById('font-btn');
-        if (topFontBtn) topFontBtn.addEventListener('click', cycleFont);
         document.getElementById('font-btn2').addEventListener('click', cycleFont);
 
         document.querySelectorAll('[data-fmt]').forEach(b => {
@@ -125,15 +143,8 @@
             document.getElementById('count').textContent = words + (words === 1 ? ' word' : ' words');
         }
 
-        document.getElementById('copy-btn').addEventListener('click', function() {
-            copyToClipboard(editor.innerText, this);
-        });
-        document.getElementById('download-btn').addEventListener('click', function() {
-            const btn = this; const o = btn.textContent;
-            downloadFile('blank-writing-' + new Date().toISOString().slice(0,10) + '.md',
-                '# Notes — ' + new Date().toISOString().slice(0,10) + '\n\n' + editor.innerText + '\n');
-            btn.textContent = 'Saved!'; setTimeout(() => btn.textContent = o, 1500);
-        });
+        ReflectionUI.bindCopy('copy-btn', () => editor.innerText, 'Copied!');
+        ReflectionUI.bindDownload('download-btn', () => '# Notes — ' + ReflectionStore.localDate() + '\n\n' + editor.innerText + '\n', () => 'blank-writing-' + ReflectionStore.localDate() + '.md', 'Saved!');
         document.getElementById('clear-btn').addEventListener('click', function() {
             if (!editor.innerText.trim() || confirm('Clear this page? (saved copy is already in this browser only)')) {
                 editor.innerHTML = ''; updateCount(); persist(); editor.focus();
