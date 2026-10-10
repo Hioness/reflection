@@ -21,6 +21,7 @@ Live pages:
 - **Text boxes are borderless** — answers and the Blank writing surface have no border, outline, or background (focus shows a faint tint instead).
 - Bottom bars (`#toolbar`, `.action-bar`) are translucent with `backdrop-filter` frosting, square corners, and a softer shadow.
 - Blank's formatting toolbar compacts on narrow screens (`Bold → B`, `Italic → I`; the font control keeps its full name, MONO/SERIF/SANS) and stays on a single row from 320px up.
+- Blank page: a `>` marker sits at the start of the first line while the box is empty (brightening on focus). Its empty state is driven by JS, not CSS `:empty`, so it survives the stray `<br>` Chrome leaves after you delete the last character — the old `:empty` placeholder was removed (and an effectively-empty buffer now saves as `""`).
 - Fresh light + dark captures of every page live in `docs/screenshots/`.
 - **Cache fix:** the previous deploy served `/assets/(.*)` with `max-age=31536000, immutable`, so returning browsers still held the pre-redesign `shared.css`/`shared.js` and rendered a hybrid page. Both are now requested with a `?v=` cache-buster and served `must-revalidate`.
 

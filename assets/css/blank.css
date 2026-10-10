@@ -13,7 +13,9 @@
 }
 
 .writer {
+  position: relative;
   min-height: 44px;
+  padding-left: 1.4em;      /* gutter that holds the start marker */
   outline: none;
   font-size: 1.25rem;
   line-height: 1.65;
@@ -22,13 +24,22 @@
 }
 .writer:focus-visible { outline: none; }
 
-.writer:empty::before {
-  content: attr(placeholder);
-  display: block;
+/* First-line start marker — a chevron shown whenever the box is empty.
+   Driven by .is-empty (JS), not :empty, which breaks as soon as Chrome
+   leaves a stray <br> after you delete the last character. */
+.writer.is-empty::before {
+  content: '>';
+  position: absolute;
+  left: 0;
+  top: 0;
   color: var(--muted);
-  opacity: 0.9;
   font-family: var(--font-mono);
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: color 0.15s ease;
 }
+.writer.is-empty:focus::before { color: var(--ink); }
 
 .writer h1 {
   font-family: var(--font-serif);

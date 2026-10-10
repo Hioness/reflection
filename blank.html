@@ -49,7 +49,7 @@
         <p class="subtitle">No prompts. Just write.</p>
 
         <div class="writer-wrap">
-            <div id="editor" class="writer font-mono" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Blank writing page" aria-placeholder="Start writing…" placeholder="Start writing…"></div>
+            <div id="editor" class="writer font-mono" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Blank writing page" aria-placeholder="Start writing…"></div>
             <div id="count">0 words</div>
             <div id="toolbar">
                 <button class="tool-btn" data-fmt="bold" aria-label="Bold"><span class="lbl-full">Bold</span><span class="lbl-short" aria-hidden="true">B</span></button>
@@ -90,11 +90,15 @@
         editor.classList.add(fonts[fontIdx]);
         syncFontBtns();
         updateCount();
+        syncEmpty();
 
         const persist = ReflectionStore.debounce(() => {
-            try { localStorage.setItem(KEY, sanitizeHTML(editor.innerHTML)); } catch (e) { ReflectionStore.notifySaveError(); }
+            try {
+                const empty = (editor.innerText || '').trim() === '';
+                localStorage.setItem(KEY, empty ? '' : sanitizeHTML(editor.innerHTML));
+            } catch (e) { ReflectionStore.notifySaveError(); }
         }, 400);
-        editor.addEventListener('input', () => { persist(); updateCount(); });
+        editor.addEventListener('input', () => { persist(); updateCount(); syncEmpty(); });
 
         editor.addEventListener('paste', (e) => {
             e.preventDefault();
@@ -143,11 +147,16 @@
             document.getElementById('count').textContent = words + (words === 1 ? ' word' : ' words');
         }
 
+        // empty-state flag for the first-line marker (reliable, unlike :empty)
+        function syncEmpty() {
+            editor.classList.toggle('is-empty', (editor.innerText || '').trim() === '');
+        }
+
         ReflectionUI.bindCopy('copy-btn', () => editor.innerText, 'Copied!');
         ReflectionUI.bindDownload('download-btn', () => '# Notes — ' + ReflectionStore.localDate() + '\n\n' + editor.innerText + '\n', () => 'blank-writing-' + ReflectionStore.localDate() + '.md', 'Saved!');
         document.getElementById('clear-btn').addEventListener('click', function() {
             if (!editor.innerText.trim() || confirm('Clear this page? (saved copy is already in this browser only)')) {
-                editor.innerHTML = ''; updateCount(); persist(); editor.focus();
+                editor.innerHTML = ''; updateCount(); syncEmpty(); persist(); editor.focus();
             }
         });
     </script>
